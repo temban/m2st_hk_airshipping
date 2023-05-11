@@ -3,7 +3,7 @@ from odoo.http import request
 import json
 
 
-class GET_TRAVELS(http.Controller):
+class TRAVEL_CRUD(http.Controller):
     # Controller that uploads a travel documents
     @http.route('/api/file_upload_submit', type='json', auth='public', website=True, csrf=False, methods=['POST'])
     def file_upload_submit(self, **kwargs):
@@ -149,7 +149,7 @@ class GET_TRAVELS(http.Controller):
     # Controller that get all current user travels by partner id
     @http.route('/api/current/user/travels', type='http', auth='user', csrf=False, website=True, methods=['GET'],
                 cors='*')
-    def user_travel_list(self, **kw):
+    def current_user_travel_list(self, **kw):
         travels = request.env['m2st_hk_airshipping.airshipping'].search(
             [('user_partner_id', '=', http.request.env.user.partner_id.id)])
         print(http.request.env.user.partner_id.id, travels)

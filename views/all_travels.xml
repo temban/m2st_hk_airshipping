@@ -106,7 +106,7 @@
 
 <script>
    function weee() {
-      const url = '/api/travel/create';
+      const url = '/api/travel/create';89
   const jsonData = JSON.stringify({
   "jsonrpc": "2.0",
   "method": "call",

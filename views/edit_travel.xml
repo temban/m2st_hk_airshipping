@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="travel_edit">
+
+    <link rel="stylesheet" href="/test_project/static/src/css/bootstrap.min.css"/>
+    <script src="/test_project/static/src/js/jquery.min.js"></script>
+    <script src="/test_project/static/src/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
+        <form method="post" action="/travel/update/19" enctype="multipart/form-data">
+
+<!--            <div class="form-group">-->
+<!--                <label for="cni_doc">cni_doc:</label>-->
+<!--                <input type="file" name="cni_doc" id="cni_doc"/>-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="ticket_doc">Second File:</label>-->
+<!--                <input type="file" name="ticket_doc" id="ticket_doc"/>-->
+<!--            </div>-->
+
+               <div class="form-group">
+                <label class="col-sm-2 control-label">id:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" t-att-value="travels.id"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type_voyage:</label>
+                <div class="col-sm-10">
+                    <select name="Type_voyage" t-att-value="travels.Type_voyage">
+                        <t t-if="travels.Type_voyage == 'terrestre'">
+                        <option t-att-value="travels.Type_voyage">Terrestre</option>
+                        <option value="aérienne">Aérienne</option>
+                        <option value="maritime">Maritime</option>
+                        </t>
+                        <t t-if="travels.Type_voyage == 'aérienne'">
+                        <option t-att-value="travels.Type_voyage">Aérienne</option>
+                        <option value="terrestre">Terrestre</option>
+                        <option value="maritime">Maritime</option>
+                        </t>
+                        <t t-if="travels.Type_voyage == 'maritime'">
+                        <option t-att-value="travels.Type_voyage">Maritime</option>
+                        <option value="terrestre">Terrestre</option>
+                        <option value="aérienne">Aérienne</option>
+                        </t>
+
+                  </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ville_depart:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="Ville_depart" class="form-control" t-att-value="travels.Ville_depart"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ville_arrivé:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="Ville_arrivé" class="form-control" t-att-value="travels.Ville_arrivé"/>
+                </div>
+            </div>
+
+                        <div class="form-group">
+                <label class="col-sm-2 control-label">Heure_depart:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="Heure_depart" class="form-control" t-att-value="travels.Heure_depart"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Heure_arrivé:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="Heure_arrivé" class="form-control" t-att-value="travels.Heure_arrivé"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nombre_kilo:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="Nombre_kilo" class="form-control" t-att-value="travels.Nombre_kilo"/>
+                </div>
+            </div>
+
+
+                        <div class="form-group">
+                <label class="col-sm-2 control-label">Prix_par_kilo:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="Prix_par_kilo" class="form-control" t-att-value="travels.Prix_par_kilo"/>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type_de_paquet_accepté:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="Type_de_paquet_accepté" class="form-control" t-att-value="travels.Type_de_paquet_accepté"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+
+
+    </template>
+</odoo>

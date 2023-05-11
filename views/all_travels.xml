@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="user_airshippings">
+    <link rel="stylesheet" href="/test_project/static/src/css/bootstrap.min.css"/>
+    <script src="/m2st_hk_airshipping/static/src/js/jquery.min.js"></script>
+    <script src="/m2st_hk_airshipping/static/src/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+                <script type="text/javascript" src="/m2st_hk_airshipping/static/src/req.js"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<div class="container">
+
+    <t t-name="m2st_hk_airshipping.MyComponent">
+    <div>
+
+       <button class="btn btn-primary" onclick="us1()">Auth</button>
+               <button class="btn btn-primary" onclick="post()">Post</button>
+
+        <h1 id="user1">ssssssssssssss</h1>
+    </div>
+</t>
+
+                <form action="/search/travel">
+                                <div class="form-group">
+                <label class="col-sm-2 control-label">Ville_depart:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="Ville_depart" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ville_arrivé:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="Ville_arrivé" class="form-control"/>
+                </div>
+            </div>
+
+
+
+                    <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+
+
+
+<div class="container table-responsive py-5">
+<table class="table table-bordered table-hover">
+  <thead class="thead-dark">
+
+    <tr>
+
+             <div class="row">
+                <div class="col-xl-5" >
+
+                      <a class="btn btn-info" t-attf-href="/travel/new"> New Travel</a>
+             </div>
+                 <div class="col-xl-5">
+                         <a class="btn btn-info" t-attf-href="/api/current/user/airshippings"> My Travels</a>
+             </div>
+             </div>
+        <h3 style="margin: 1rem 1rem"> All Travels</h3>
+         <th scope="col">id</th>
+      <th scope="col">Type_voyage</th>
+         <th scope="col">Ville_depart</th>
+      <th scope="col">Ville_arrivé</th>
+      <th scope="col">Heure_depart</th>
+
+      <th scope="col">Heure_arrivé</th>
+      <th scope="col">Nombre_kilo</th>
+      <th scope="col">Prix_par_kilo</th>
+        <th scope="col" >Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr t-foreach="airshippings" t-as="airshipping">
+
+      <td>  <t t-esc="airshipping.id"/></td>
+         <td>  <t t-esc="airshipping.travel_type"/></td>
+         <td>  <t t-esc="airshipping.departure_town"/></td>
+      <td>  <t t-esc="airshipping.arrival_town"/></td>
+      <td>  <t t-esc="airshipping.departure_date"/></td>
+
+      <td>  <t t-esc="airshipping.arrival_date"/></td>
+      <td>  <t t-esc="airshipping.kilo_qty"/></td>
+      <td>  <t t-esc="airshipping.price_per_kilo"/></td>
+
+         <td>
+             <div class="row">
+                <div class="col-xl-5" >
+                  <a class="btn btn-info" t-attf-href="/travel/edit/#{airshipping.id}">Edite</a>
+             </div>
+                 <div class="col-xl-5">
+                   <a class="btn btn-info" t-attf-href="/api/travel/delete/#{airshipping.id}"> delete</a>
+             </div>
+             </div>
+          </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+   function weee() {
+      const url = '/api/travel/create';
+  const jsonData = JSON.stringify({
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "travel_type": "by_air",
+    "departure_town": "porto",
+    "arrival_town": "mage",
+    "departure_date": "2024-06-23",
+    "arrival_date": "2025-06-24",
+    "kilo_qty": 55,
+    "price_per_kilo": 300,
+    "type_of_luggage_accepted": "all what is bags"
+  }
+})
+  axios.post(url, jsonData, {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+    }
+
+</script>
+
+        <script>
+   function eeee() {
+      const url = '/search/travel';
+  const jsonData = JSON.stringify({
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "departure_town": "porto",
+    "arrival_town": "mage"
+  }
+})
+  axios.post(url, jsonData, {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+    }
+
+</script>
+
+        <script>
+   function iii() {
+
+axios.get('/travel/view/35', {
+headers: {
+ 'Content-Type': 'application/json',
+}
+}).then(response => {
+ console.log(response);
+  })
+.catch(function(error) {
+    console.log(error);
+});
+}
+
+</script>
+
+                <script>
+   function post() {
+
+axios.delete('/api/travel/delete/45'
+                    ).then(response => {
+ console.log(response);
+  })
+.catch(function(error) {
+    console.log(error);
+});
+}
+
+</script>
+
+    </template>
+</odoo>

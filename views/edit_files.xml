@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="travel_create">
+
+    <link rel="stylesheet" href="/test_project/static/src/css/bootstrap.min.css"/>
+    <script src="/test_project/static/src/js/jquery.min.js"></script>
+    <script src="/test_project/static/src/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
+
+
+    </template>
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="travel_create">
+
+    <link rel="stylesheet" href="/test_project/static/src/css/bootstrap.min.css"/>
+    <script src="/test_project/static/src/js/jquery.min.js"></script>
+    <script src="/test_project/static/src/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
+        <form method="post" action="/api/travel/create" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="cni_doc">cni_doc:</label>
+                <input type="file" name="cni_doc" id="cni_doc"/>
+            </div>
+            <div class="form-group">
+                <label for="ticket_doc">Second File:</label>
+                <input type="file" name="ticket_doc" id="ticket_doc"/>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type_voyage:</label>
+                <div class="col-sm-10">
+                    <select name="travel_type">
+                        <option value="by_road">By Land</option>
+                        <option value="by_air">By Air</option>
+                        <option value="by_sea">By Sea</option>
+                  </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ville_depart:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="departure_town" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ville_arrivé:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="arrival_town" class="form-control"/>
+                </div>
+            </div>
+
+                        <div class="form-group">
+                <label class="col-sm-2 control-label">Heure_depart:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="departure_date" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Heure_arrivé:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="arrival_date" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nombre_kilo:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="kilo_qty" class="form-control"/>
+                </div>
+            </div>
+
+
+                        <div class="form-group">
+                <label class="col-sm-2 control-label">Prix_par_kilo:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="price_per_kilo" class="form-control"/>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type_de_paquet_accepté:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="type_of_luggage_accepted" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+
+
+    </template>
+</odoo>

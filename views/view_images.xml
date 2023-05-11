@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <template id="my_model_form_template">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="image" widget="image"/>
+                    </group>
+                    <footer>
+                        <button name="save" string="Save" type="object"/>
+                        <button name="cancel" string="Cancel" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </template>
+
+        <template id="my_model_tree_template">
+            <tree>
+                <field name="name"/>
+                <field name="image" widget="image"/>
+                <button name="view" string="View" type="object"/>
+                <button name="edit" string="Edit" type="object"/>
+                <button name="delete" string="Delete" type="object"/>
+            </tree>
+        </template>
+
+        <template id="my_model_view_template">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="image" widget="image" readonly="1"/>
+                    </group>
+                    <footer>
+                        <button name="edit" string="Edit" type="object"/>
+                        <button name="delete" string="Delete" type="object"/>
+                    </footer>
+                </sheet>
+            </form>
+        </template>
+    </data>
+</odoo>

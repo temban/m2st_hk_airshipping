@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="user_travels_search">
+
+    <link rel="stylesheet" href="/test_project/static/src/css/bootstrap.min.css"/>
+    <script src="/test_project/static/src/js/jquery.min.js"></script>
+    <script src="/test_project/static/src/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+<div class="container table-responsive py-5">
+<table class="table table-bordered table-hover">
+  <thead class="thead-dark">
+
+    <tr>
+             <div class="row">
+                <div class="col-xl-5" >
+                      <a class="btn btn-info" t-attf-href="/travel/new"> New Travel</a>
+             </div>
+                 <div class="col-xl-5">
+                         <a class="btn btn-info" t-attf-href="/api/user/airshippings">My Travels</a>
+             </div>
+             </div>
+        <h3 style="margin: 1rem 1rem"> Search Results</h3>
+         <th scope="col">id</th>
+      <th scope="col">Type_voyage</th>
+         <th scope="col">Ville_depart</th>
+      <th scope="col">Ville_arrivé</th>
+      <th scope="col">Heure_depart</th>
+
+      <th scope="col">Heure_arrivé</th>
+      <th scope="col">Nombre_kilo</th>
+      <th scope="col">Prix_par_kilo</th>
+        <th scope="col" >Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr t-foreach="airshippings" t-as="airshipping">
+
+      <td>  <t t-esc="airshipping.id"/></td>
+         <td>  <t t-esc="airshipping.Type_voyage"/></td>
+         <td>  <t t-esc="airshipping.Ville_depart"/></td>
+      <td>  <t t-esc="airshipping.Ville_arrivé"/></td>
+      <td>  <t t-esc="airshipping.Heure_depart"/></td>
+
+      <td>  <t t-esc="airshipping.Heure_arrivé"/></td>
+      <td>  <t t-esc="airshipping.Nombre_kilo"/></td>
+      <td>  <t t-esc="airshipping.Prix_par_kilo"/></td>
+
+         <td>
+             <div class="row">
+                <div class="col-xl-5" >
+                  <a class="btn btn-info" t-attf-href="/travel/edit/#{airshipping.id}">Edit</a>
+             </div>
+                 <div class="col-xl-5">
+                   <a class="btn btn-info" t-attf-href="/api/travel/delete/#{airshipping.id}"> delete</a>
+             </div>
+             </div>
+          </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+    </template>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+<record id="travel_form" model="ir.ui.view">
+    <field name="name">travel.form</field>
+    <field name="model">m2st_hk_airshipping.airshipping</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="user_partner_id"/>
+                        <field name="travel_type"/>
+                        <field name="status"/>
+                        <field name="disable"/>
+                        <field name="type_of_luggage_accepted"/>
+                    </group>
+                    <group>
+                        <field name="departure_town"/>
+                        <field name="arrival_town"/>
+                        <field name="departure_date"/>
+                        <field name="arrival_date"/>
+                        <field name="kilo_qty"/>
+                        <field name="price_per_kilo"/>
+                    </group>
+                </group>
+<group>
+    <field name="files_uploaded_id">
+        <tree>
+            <field name="cni_doc" widget="image" options='{"size": [450, 500]}'/>
+            <field name="ticket_doc" widget="image" options='{"size": [450, 500]}'/>
+        </tree>
+    </field>
+</group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+<record id="travel_tree" model="ir.ui.view">
+    <field name="name">travel.form</field>
+    <field name="model">m2st_hk_airshipping.airshipping</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="user_partner_id" string="User Partner"/>
+            <field name="travel_type" string="Travel Type"/>
+            <field name="status"/>
+            <field name="disable"/>
+            <field name="departure_town" string="Departure Town"/>
+            <field name="arrival_town" string="Arrival Town"/>
+            <field name="departure_date" string="Departure Date"/>
+            <field name="arrival_date" string="Arrival Date"/>
+            <field name="kilo_qty" string="Kilo Quantity"/>
+            <field name="price_per_kilo" string="Price per Kilo"/>
+            <field name="type_of_luggage_accepted" string="Accepted Luggage Types"/>
+            <field name="files_uploaded_id" string="Uploaded Files">
+                <tree>
+                    <field name="cni_doc" widget="image" string="CNI Document"/>
+                    <field name="ticket_doc" widget="image" string="Ticket Document"/>
+                </tree>
+            </field>
+        </tree>
+    </field>
+</record>
+
+
+
+     <record id="travel_action" model="ir.actions.act_window">
+        <field name="name">travels</field>
+        <field name="type">ir.actions.act_window</field>
+         <field name="res_model">m2st_hk_airshipping.airshipping</field>
+         <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="travels_menu" name="HubKilo Travels Announcements" sequence="20" action="travel_action" groups="base.group_user" web_icon="Clients,static/description/icon.png"/>
+</odoo>

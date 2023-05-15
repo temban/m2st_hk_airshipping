@@ -21,6 +21,15 @@
     </div>
 </t>
 
+
+        <t t-name="file.upload.template">
+        <div>
+            <input type="file" name="cni_doc" accept="image/*" />
+            <input type="file" name="ticket_doc" accept="image/*" />
+            <button type="button" onclick="uploadFiles()">Upload</button>
+        </div>
+    </t>
+
                 <form action="/search/travel">
                                 <div class="form-group">
                 <label class="col-sm-2 control-label">Ville_depart:</label>
@@ -193,5 +202,28 @@ axios.delete('/api/travel/delete/45'
 
 </script>
 
+        <script type="text/javascript">
+    function uploadFiles() {
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        const formData = new FormData();
+
+        fileInputs.forEach(input => {
+            const fieldName = input.name;
+            const files = input.files;
+
+            if (files.length > 0) {
+                formData.append(fieldName, files[0]);
+            }
+        });
+
+        axios.post('/create_file_upload', formData)
+            .then(response => {
+                console.log('Upload successful!', response.data);
+            })
+            .catch(error => {
+                console.error('Upload failed!', error);
+            });
+    }
+</script>
     </template>
 </odoo>

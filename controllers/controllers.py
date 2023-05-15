@@ -45,7 +45,35 @@ class FileUploadController(http.Controller):
     #         [('user_partner_id', '=', user_partner_id)])
     #     return request.render('m2st_hk_airshipping.user_travels', {'airshippings': airshippings})
 
+        @http.route('/api/res/<int:partner_id>', methods=['GET'], type='http', auth='user', cors='*',
+                    csrf=False)
+        def get_res_partner(self, partner_id=None):
+            partner = http.request.env['res.partner'].sudo().search([('id', '=', id)], limit=1)
+            if not partner:
+                return http.Response(json.dumps({'error': 'Partner not found'}), mimetype='application/json',
+                                     status=404)
+            else:
+                partner_dict = {
+                    'id': partner.id,
+                    'name': partner.name,
+                    'email': partner.email,
+                    'phone': partner.phone,
+                    'street': partner.street,
+                    'street2': partner.street2,
+                    'city': partner.city,
+                    'state_id': partner.state_id.id,
+                    'zip': partner.zip,
+                    'company_id': partner.company_id.id,
+                    'is_company': partner.is_company,
+                    'company_name': partner.company_name,
+                    'country_id': partner.country_id.name,
+                    'birthday': partner.birthday.strftime('%Y-%m-%d'),
+                    'birthplace': partner.birthplace,
+                    'sex': partner.sex,
+                    'is_traveler': partner.is_traveler
+                }
 
+                return json.dumps({'partner': partner_dict})
 
 
 
@@ -61,22 +89,6 @@ class FileUploadController(http.Controller):
             }
             partner = request.env['res.partner'].sudo().create(values)
             return http.request.redirect('/partner_created/%s' % partner.id)
-
-    @http.route('/res/get_data', auth='public', csrf=False, website=True, methods=['GET'])
-    def function(self, **kwargs):
-        partners = http.request.env['res.partner'].sudo().search([])
-        partner_list = []
-        for partner in partners:
-            partner_dict = {
-                'id': partner.id,
-                'name': partner.name,
-                'email': partner.email,
-                'phone': partner.phone,
-                # Add any other fields you want to include in the JSON object
-            }
-            partner_list.append(partner_dict)
-        return json.dumps(partner_list)
-
 
     @http.route('/my_module/get_data', auth='public', csrf=False, website=True)
     def get_data(self):

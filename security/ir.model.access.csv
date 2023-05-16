@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_m2st_hk_airshipping_airshipping,m2st_hk_airshipping_airshipping,model_m2st_hk_airshipping_airshipping,base.group_user,1,1,1,1
 access_m2st_hk_airshipping_airshipping_file_upload,m2st_hk_airshipping_airshipping_file_upload,model_m2st_hk_airshipping_airshipping_file_upload,base.group_user,1,1,1,1
+access_m2st_hk_airshipping_publicity,m2st_hk_airshipping_publicity,model_m2st_hk_airshipping_publicity,base.group_user,1,1,1,1

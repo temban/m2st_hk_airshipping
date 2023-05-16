@@ -108,3 +108,23 @@ class FileUploadController(http.Controller):
             })
         return json.dumps(partner_data)
 
+from odoo import http, fields
+from odoo.http import request
+import json
+import base64
+
+# class Image(http.Controller):
+#     @http.route('/image_1920/update', type='http', auth='user', website=True,
+#                 csrf=False, methods=['POST'], cors='*')
+#     def image_1920_upload(self, **kwargs):
+#         image_1920_upload = request.env['res.partner'].sudo().browse(http.request.env.user.partner_id.id)
+#         # Read the file data and convert to base64
+#         image_1920_doc_data = kwargs['image_1920_doc'].read()
+#         image_1920_doc_base64 = base64.b64encode(image_1920_doc_data).decode('utf-8') if image_1920_doc_data else False
+#
+#         values = {
+#             'image_1920': image_1920_doc_base64,
+#         }
+#         updated_image_1920 = image_1920_upload.write(values)
+#         print(updated_image_1920)
+#         return json.dumps({'status': 200, 'message': 'success'})

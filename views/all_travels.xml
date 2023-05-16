@@ -21,6 +21,7 @@
     </div>
 </t>
 
+    <img src="http://localhost:8090/web/image/m2st_hk_airshipping.airshipping_file_upload/33/ticket_doc"/>
 
         <t t-name="file.upload.template">
         <div>

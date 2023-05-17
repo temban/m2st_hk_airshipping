@@ -23,7 +23,7 @@ class PublicityController(http.Controller):
                 pub = publicity_list
             return json.dumps({'status': 200, 'publicity': pub, 'message': 'success'})
         else:
-            return 'Nothing posted!'
+            return 'Empty!'
 
         # json_data = json.dumps(publicity_list, indent=4)
         # headers = [('Content-Type', 'application/json')]

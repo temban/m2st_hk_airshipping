@@ -7,21 +7,9 @@ from datetime import datetime, timedelta
 from werkzeug.wrappers import Response
 
 
-class TRAVEL_CRUD(http.Controller):
+class TravelFiles(http.Controller):
 
-    def update_due_travels_disable(self):
-        due_travels = http.request.env['m2st_hk_airshipping.airshipping'].sudo().search([])
-        if due_travels:
-            for due_travel in due_travels:
-                current_date = datetime.now().date()
-                if due_travel.departure_date and (due_travel.departure_date - timedelta(days=1)) <= current_date:
-                    due_travel.disable = True
-                    print("due_departure_date", (due_travel.departure_date - timedelta(days=1)), '<=', "previous_date",
-                          current_date, 'sattus', due_travel.disable)
-                else:
-                    due_travel.disable = False
-
-    # Controller that uploads a travel documents
+    # Controller that uploads and update a travel documents
     @http.route('/air/travel/document/upload', type='http', auth='user', website=True, csrf=False, methods=['POST'],
                 cors='*')
     def create_file_upload(self, **kwargs):
@@ -75,6 +63,21 @@ class TRAVEL_CRUD(http.Controller):
         updated_file_upload = file_upload.write(values)
         return json.dumps({'status': 200, 'message': 'success'})
 
+
+class TravelCrud(http.Controller):
+    # function that disable due travels
+    def update_due_travels_disable(self):
+        due_travels = http.request.env['m2st_hk_airshipping.airshipping'].sudo().search([])
+        if due_travels:
+            for due_travel in due_travels:
+                current_date = datetime.now().date()
+                if due_travel.departure_date and (due_travel.departure_date - timedelta(days=1)) <= current_date:
+                    due_travel.disable = True
+                    print("due_departure_date", (due_travel.departure_date - timedelta(days=1)), '<=', "previous_date",
+                          current_date, 'sattus', due_travel.disable)
+                else:
+                    due_travel.disable = False
+
     # Controller that creates a new travel
     @http.route('/air/api/travel/create', type='json', auth='user', website=True, csrf=False, methods=['POST'],
                 cors='*')
@@ -87,6 +90,7 @@ class TRAVEL_CRUD(http.Controller):
             'departure_date': fields.Date.to_date(kwargs.get('departure_date')),
             'arrival_date': fields.Date.to_date(kwargs.get('arrival_date')),
             'kilo_qty': kwargs.get('kilo_qty'),
+            'negotiation': kwargs.get('negotiation'),
             'price_per_kilo': kwargs.get('price_per_kilo'),
             'type_of_luggage_accepted': kwargs.get('type_of_luggage_accepted'),
         }
@@ -103,6 +107,7 @@ class TRAVEL_CRUD(http.Controller):
                         'departure_date': travel_info.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': travel_info.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': travel_info.kilo_qty,
+                        'negotiation': travel_info.negotiation,
                         'price_per_kilo': travel_info.price_per_kilo,
                         'type_of_luggage_accepted': travel_info.type_of_luggage_accepted,
                     }}
@@ -126,6 +131,7 @@ class TRAVEL_CRUD(http.Controller):
                     'arrival_town': travel.arrival_town,
                     'status': travel.status,
                     'disable': travel.disable,
+                    'negotiation': travel.negotiation,
                     'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
                     'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
                     'kilo_qty': travel.kilo_qty,
@@ -168,6 +174,7 @@ class TRAVEL_CRUD(http.Controller):
                     'arrival_town': travel.arrival_town,
                     'status': travel.status,
                     'disable': travel.disable,
+                    'negotiation': travel.negotiation,
                     'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
                     'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
                     'kilo_qty': travel.kilo_qty,
@@ -192,7 +199,7 @@ class TRAVEL_CRUD(http.Controller):
                 cors='*')
     def view_travel(self, travel_id, **kw):
         self.update_due_travels_disable()
-        travel = request.env['m2st_hk_airshipping.airshipping'].browse(travel_id)
+        travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(travel_id)
         if travel:
             files_uploaded_id = travel.files_uploaded_id[0].id if travel.files_uploaded_id else None
             travel_result = {
@@ -202,6 +209,7 @@ class TRAVEL_CRUD(http.Controller):
                 'arrival_town': travel.arrival_town,
                 'status': travel.status,
                 'disable': travel.disable,
+                'negotiation': travel.negotiation,
                 'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
                 'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
                 'kilo_qty': travel.kilo_qty,
@@ -225,8 +233,8 @@ class TRAVEL_CRUD(http.Controller):
                 cors='*')
     def current_user_travel_list(self, **kw):
         self.update_due_travels_disable()
-        travels = request.env['m2st_hk_airshipping.airshipping'].search(
-            [('user_partner_id', '=', http.request.env.user.partner_id.id)])
+        travels = request.env['m2st_hk_airshipping.airshipping'].sudo().search(
+            [('user_partner_id', '=', http.request.env.user.partner_id.id), ('disable', '=', False)])
         user_travels_list = []
 
         if travels:
@@ -240,6 +248,7 @@ class TRAVEL_CRUD(http.Controller):
                     'arrival_town': user_travel.arrival_town,
                     'status': user_travel.status,
                     'disable': user_travel.disable,
+                    'negotiation': user_travel.negotiation,
                     'departure_date': user_travel.departure_date.strftime('%Y-%m-%d'),
                     'arrival_date': user_travel.arrival_date.strftime('%Y-%m-%d'),
                     'kilo_qty': user_travel.kilo_qty,
@@ -258,7 +267,7 @@ class TRAVEL_CRUD(http.Controller):
                 methods=['GET'], cors='*')
     def user_travel_list(self, partner_id, **kw):
         self.update_due_travels_disable()
-        travels = request.env['m2st_hk_airshipping.airshipping'].search([('user_partner_id', '=', partner_id)])
+        travels = request.env['m2st_hk_airshipping.airshipping'].sudo().search([('user_partner_id', '=', partner_id)])
         user_travels_list = []
         if travels:
             for user_travel in travels:
@@ -269,6 +278,7 @@ class TRAVEL_CRUD(http.Controller):
                     'departure_town': user_travel.departure_town,
                     'arrival_town': user_travel.arrival_town,
                     'status': user_travel.status,
+                    'negotiation': user_travel.negotiation,
                     'departure_date': user_travel.departure_date.strftime('%Y-%m-%d'),
                     'arrival_date': user_travel.arrival_date.strftime('%Y-%m-%d'),
                     'kilo_qty': user_travel.kilo_qty,
@@ -295,7 +305,7 @@ class TRAVEL_CRUD(http.Controller):
                 methods=['DELETE'],
                 cors='*')
     def delete_travel(self, airshipping_id, **kw):
-        travel = request.env['m2st_hk_airshipping.airshipping'].browse(airshipping_id)
+        travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(airshipping_id)
         if travel:
             travel.write({
                 'disable': True,
@@ -336,98 +346,97 @@ class TRAVEL_CRUD(http.Controller):
         else:
             return 'Something went wrong!'
 
-    # @http.route('/employee/get/all_air/travels', type='http', auth='user', csrf=False, website=True, methods=['GET'], cors='*')
-    # def employee_get_all_travels(self, **kwargs):
-    #     travels = request.env['m2st_hk_airshipping.airshipping'].sudo().search([])
-    #     travels_list = []
-    #     if travels:
-    #         for travel in travels:
-    #             travels_dict = {
-    #                 'id': travel.id,
-    #                 'travel_type': travel.travel_type,
-    #                 'departure_town': travel.departure_town,
-    #                 'arrival_town': travel.arrival_town,
-    #                 'validation': travel.Validation,
-    #                 'disable': travel.disable,
-    #                 'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
-    #                 'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
-    #                 'kilo_qty': travel.kilo_qty,
-    #                 'price_per_kilo': travel.price_per_kilo,
-    #                 'type_of_luggage_accepted': travel.type_of_luggage_accepted,
-    #                 'user': {
-    #                     'user_id': travel.user_partner_id.id,
-    #                     'user_name': travel.user_partner_id.name,
-    #                     'user_email': travel.user_partner_id.email,
-    #                 }
-    #             }
-    #             travels_list.append(travels_dict)
-    #             data = {'status': 200, 'response': travels_list, 'message': 'success'}
-    #             print(data)
-    #         return json.dumps(data)
-    #     else:
-    #         return 'Empty!'
-    #
-    # # Controller to let employee validate user's travel
-    # @http.route('/employee/travel/validation/<int:travel_id>', type='json', auth='user', methods=['POST'], website=True,
-    #             csrf=False, cors='*')
-    # def validate_travel(self, travel_id, **kwargs):
-    #     travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(travel_id)
-    #     if travel:
-    #         travel.write({
-    #             'Validation': True,
-    #         })
-    #         travel_validate = {
-    #             'id': travel.id,
-    #             'travel_type': travel.travel_type,
-    #             'departure_town': travel.departure_town,
-    #             'arrival_town': travel.arrival_town,
-    #             'validation': travel.Validation,
-    #             'disable': travel.disable,
-    #             'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
-    #             'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
-    #             'kilo_qty': travel.kilo_qty,
-    #             'price_per_kilo': travel.price_per_kilo,
-    #             'type_of_luggage_accepted': travel.type_of_luggage_accepted,
-    #             'user': {
-    #                 'user_id': travel.user_partner_id.id,
-    #                 'user_name': travel.user_partner_id.name,
-    #                 'user_email': travel.user_partner_id.email,
-    #             }
-    #         }
-    #         data = {'status': 200, 'response': travel_validate, 'message': 'success'}
-    #         return data
-    #     else:
-    #         return 'Request failed!'
-    #
-    # # Controller to let employee reject user's travel
-    # @http.route('/employee/travel/rejection/<int:travel_id>', type='json', auth='user', methods=['POST'], website=True,
-    #             csrf=False, cors='*')
-    # def travel_rejection(self, travel_id, **kwargs):
-    #     travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(travel_id)
-    #     if travel:
-    #         travel.write({
-    #             'rejected': True,
-    #         })
-    #         travel_validate = {
-    #             'id': travel.id,
-    #             'travel_type': travel.travel_type,
-    #             'departure_town': travel.departure_town,
-    #             'arrival_town': travel.arrival_town,
-    #             'validation': travel.Validation,
-    #             'disable': travel.disable,
-    #             'rejected': travel.rejected,
-    #             'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
-    #             'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
-    #             'kilo_qty': travel.kilo_qty,
-    #             'price_per_kilo': travel.price_per_kilo,
-    #             'type_of_luggage_accepted': travel.type_of_luggage_accepted,
-    #             'user': {
-    #                 'user_id': travel.user_partner_id.id,
-    #                 'user_name': travel.user_partner_id.name,
-    #                 'user_email': travel.user_partner_id.email,
-    #             }
-    #         }
-    #         data = {'status': 200, 'response': travel_validate, 'message': 'success'}
-    #         return data
-    #     else:
-    #         return 'Request failed!'
+    @http.route('/employee/get/all_air/travels', type='http', auth='user', csrf=False, website=True, methods=['GET'], cors='*')
+    def employee_get_all_travels(self, **kwargs):
+        travels = request.env['m2st_hk_airshipping.airshipping'].sudo().search([])
+        travels_list = []
+        if travels:
+            for travel in travels:
+                travels_dict = {
+                    'id': travel.id,
+                    'travel_type': travel.travel_type,
+                    'departure_town': travel.departure_town,
+                    'arrival_town': travel.arrival_town,
+                    'disable': travel.disable,
+                    'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
+                    'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
+                    'kilo_qty': travel.kilo_qty,
+                    'price_per_kilo': travel.price_per_kilo,
+                    'type_of_luggage_accepted': travel.type_of_luggage_accepted,
+                    'user': {
+                        'user_id': travel.user_partner_id.id,
+                        'user_name': travel.user_partner_id.name,
+                        'user_email': travel.user_partner_id.email,
+                    }
+                }
+                travels_list.append(travels_dict)
+                data = {'status': 200, 'response': travels_list, 'message': 'success'}
+                print(data)
+            return json.dumps(data)
+        else:
+            return 'Empty!'
+
+    # Controller to let employee validate user's travel
+    @http.route('/employee/travel/validation/<int:travel_id>', type='json', auth='user', methods=['POST'], website=True,
+                csrf=False, cors='*')
+    def validate_travel(self, travel_id, **kwargs):
+        travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(travel_id)
+        if travel:
+            travel.write({
+                'Validation': True,
+            })
+            travel_validate = {
+                'id': travel.id,
+                'travel_type': travel.travel_type,
+                'departure_town': travel.departure_town,
+                'arrival_town': travel.arrival_town,
+                'validation': travel.Validation,
+                'disable': travel.disable,
+                'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
+                'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
+                'kilo_qty': travel.kilo_qty,
+                'price_per_kilo': travel.price_per_kilo,
+                'type_of_luggage_accepted': travel.type_of_luggage_accepted,
+                'user': {
+                    'user_id': travel.user_partner_id.id,
+                    'user_name': travel.user_partner_id.name,
+                    'user_email': travel.user_partner_id.email,
+                }
+            }
+            data = {'status': 200, 'response': travel_validate, 'message': 'success'}
+            return data
+        else:
+            return 'Request failed!'
+
+    # Controller to let employee reject user's travel
+    @http.route('/employee/travel/rejection/<int:travel_id>', type='json', auth='user', methods=['POST'], website=True,
+                csrf=False, cors='*')
+    def travel_rejection(self, travel_id, **kwargs):
+        travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(travel_id)
+        if travel:
+            travel.write({
+                'rejected': True,
+            })
+            travel_validate = {
+                'id': travel.id,
+                'travel_type': travel.travel_type,
+                'departure_town': travel.departure_town,
+                'arrival_town': travel.arrival_town,
+                'validation': travel.Validation,
+                'disable': travel.disable,
+                'rejected': travel.rejected,
+                'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
+                'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
+                'kilo_qty': travel.kilo_qty,
+                'price_per_kilo': travel.price_per_kilo,
+                'type_of_luggage_accepted': travel.type_of_luggage_accepted,
+                'user': {
+                    'user_id': travel.user_partner_id.id,
+                    'user_name': travel.user_partner_id.name,
+                    'user_email': travel.user_partner_id.email,
+                }
+            }
+            data = {'status': 200, 'response': travel_validate, 'message': 'success'}
+            return data
+        else:
+            return 'Request failed!'

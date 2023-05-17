@@ -13,7 +13,7 @@
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Shipping',
-    'version': '4.3.3',
+    'version': '1.2.2',
     'sequence': 10,
 
     # any module necessary for this one to work correctly
@@ -21,10 +21,12 @@
 
     # always loaded
     'data': [
-        'views/travels.xml',
         'security/ir.model.access.csv',
+        # 'security/ir1.model.access.csv',
         'views/all_travels.xml',
-        'views/hubKilo_pub.xml'
+        'views/hubkilo_travels.xml',
+        'views/hubKilo_pub.xml',
+        'views/hubkilo_bookings.xml'
         # 'views/create_travel.xml',
         # 'views/edit_travel.xml',
         # 'views/user_all_travels.xml',

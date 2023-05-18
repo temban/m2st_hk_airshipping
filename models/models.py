@@ -33,7 +33,7 @@ class AirShipping(models.Model):
         ('rejected', 'Rejected'),
         ('accepted', 'Accepted')
     ], string='Status', default='pending')
-    disable = fields.Boolean(string='Travel disable', compute='_compute_disable', store=True, default=False)
+    disable = fields.Boolean(string='Travel disable', compute='_compute_disable', store=True, default=False, readonly=False)
     negotiation = fields.Boolean(string='Travel negotiation', default=False)
     departure_town = fields.Char(string='Departure town', required=True)
     arrival_town = fields.Char(string='Arrival town', required=True)

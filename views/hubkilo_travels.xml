@@ -45,8 +45,8 @@
         <tree>
             <field name="user_partner_id" string="User Partner"/>
             <field name="travel_type" string="Travel Type"/>
-            <field name="status"/>
-            <field name="disable"/>
+            <field name="status" string="Status"/>
+            <field name="disable" string="Disable"/>
             <field name="departure_town" string="Departure Town"/>
             <field name="arrival_town" string="Arrival Town"/>
             <field name="departure_date" string="Departure Date"/>

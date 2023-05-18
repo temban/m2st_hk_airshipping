@@ -76,7 +76,7 @@ class TravelCrud(http.Controller):
                     print("due_departure_date", (due_travel.departure_date - timedelta(days=1)), '<=', "previous_date",
                           current_date, 'sattus', due_travel.disable)
                 else:
-                    due_travel.disable = False
+                    'still valid'
 
     # Controller that creates a new travel
     @http.route('/air/api/travel/create', type='json', auth='user', website=True, csrf=False, methods=['POST'],
@@ -306,8 +306,15 @@ class TravelCrud(http.Controller):
                 cors='*')
     def delete_travel(self, airshipping_id, **kw):
         travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(airshipping_id)
+        if travel.status == 'accepted':
+            error_response = {
+                'success': False,
+                'error_message': 'This travel has already been accepted!.'
+            }
+            return error_response
         if travel:
-            travel.write({
+            print(travel)
+            travel.sudo().write({
                 'disable': True,
             })
             return json.dumps({'status': 200, 'message': 'deleted'})
@@ -321,6 +328,12 @@ class TravelCrud(http.Controller):
         travel = request.env['m2st_hk_airshipping.airshipping'].sudo().browse(travel_id)
         print(travel.user_partner_id.id)
         print(http.request.env.user.partner_id.id)
+        if travel.status == 'accepted':
+            error_response = {
+                'success': False,
+                'error_message': 'This travel has already been accepted!.'
+            }
+            return error_response
         if travel.user_partner_id.id == http.request.env.user.partner_id.id:
             travel.write({
                 'departure_town': kwargs.get('departure_town'),
@@ -329,6 +342,7 @@ class TravelCrud(http.Controller):
                 'arrival_date': fields.Date.to_date(kwargs.get('arrival_date')),
                 'kilo_qty': kwargs.get('kilo_qty'),
                 'price_per_kilo': kwargs.get('price_per_kilo'),
+                'status': 'pending',
                 'type_of_luggage_accepted': kwargs.get('type_of_luggage_accepted')
             })
             travel_updated = {

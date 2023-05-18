@@ -9,11 +9,24 @@ from werkzeug.wrappers import Response
 
 class TravelBookingController(http.Controller):
 
+    @http.route('/air/confirm/booking/<int:booking_id>', auth='user', csrf=False, website=True,
+                methods=['PUT'], type='json', cors='*')
+    def user_confirm_booking(self, booking_id, **kw):
+        booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(booking_id)
+        if booking:
+            booking.sudo().write({
+                'confirm': True,
+            })
+            booking.travel_id.kilo_qty -= int(booking.kilo_booked)
+            # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
+            return {'status': 200, 'message': 'Confirm'}
+        else:
+            return 'Request Failed'
     @http.route('/air/travel/booking/create', type='json', auth='user', website=True, csrf=False, methods=['POST'],
                 cors='*')
     def create_booking(self, **post):
         travel_id = post.get('travel_id')
-        partner_id = post.get('partner_id')
+        receiver_partner_id = post.get('receiver_partner_id')
         receiver_name = post.get('receiver_name')
         receiver_email = post.get('receiver_email')
         receiver_phone = post.get('receiver_phone')
@@ -25,7 +38,7 @@ class TravelBookingController(http.Controller):
         kilo_booked = post.get('kilo_booked')
         kilo_booked_price = post.get('kilo_booked_price')
 
-        if not partner_id and not (receiver_name and receiver_email and receiver_phone):
+        if not receiver_partner_id and not (receiver_name and receiver_email and receiver_phone):
             error_response = {
                 'success': False,
                 'error_message': 'Receiver information is incomplete.'
@@ -47,19 +60,20 @@ class TravelBookingController(http.Controller):
         booking_vals1 = {
             'sender_id': http.request.env.user.partner_id.id,
             'travel_id': travel_id,
-            'receiver_partner_id': partner_id,
+            'receiver_partner_id': receiver_partner_id,
 
             'type_of_luggage': type_of_luggage,
             # 'luggage_image_base64': luggage_image_base64,
             'kilo_booked': kilo_booked,
         }
 
-        if partner_id:
+        if receiver_partner_id:
             booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().create(booking_vals1)
             booking._onchange_receiver_partner_id()
         elif receiver_name and receiver_email or receiver_phone or receiver_address:
             booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().create(booking_vals)
             booking._onchange_receiver_info()
+
 
         success_response = {
             'booking_id': booking.id,

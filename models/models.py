@@ -61,6 +61,7 @@ class TravelBooking(models.Model):
     kilo_booked = fields.Integer(string='kilo qty', required=True)
     kilo_booked_price = fields.Float(string='Price of reserved kilos', required=True, default=100.0)
     disable = fields.Boolean(string='Disable Booking', default=False)
+    confirm = fields.Boolean(string='Booking confirm status', default=False)
     status = fields.Selection([
         ('pending', 'Pending'),
         ('rejected', 'Rejected'),

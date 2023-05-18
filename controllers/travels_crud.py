@@ -142,7 +142,7 @@ class TravelCrud(http.Controller):
                         'user_id': travel.user_partner_id.id,
                         'user_name': travel.user_partner_id.name,
                         'user_email': travel.user_partner_id.email,
-                        'image_1920': travel.user_partner_id.image_1920.decode('utf-8')
+                        'image_1920': travel.user_partner_id.image_1920.decode('utf-8') if travel.user_partner_id.image_1920 else None
                     }
                 }
                 travels_list.append(travels_dict)
@@ -185,7 +185,7 @@ class TravelCrud(http.Controller):
                         'user_id': travel.user_partner_id.id,
                         'user_name': travel.user_partner_id.name,
                         'user_email': travel.user_partner_id.email,
-                        'image_1920': travel.user_partner_id.image_1920.decode('utf-8')
+                        'image_1920': travel.user_partner_id.image_1920.decode('utf-8') if travel.user_partner_id.image_1920 else None
                     }
                 }
                 travels_search.append(travels_results)
@@ -220,7 +220,7 @@ class TravelCrud(http.Controller):
                     'user_id': travel.user_partner_id.id,
                     'user_name': travel.user_partner_id.name,
                     'user_email': travel.user_partner_id.email,
-                    'image_1920': travel.user_partner_id.image_1920.decode('utf-8')
+                    'image_1920': travel.user_partner_id.image_1920.decode('utf-8') if travel.user_partner_id.image_1920 else None
                 }
             }
             result = {'status': 200, 'response': travel_result, 'message': 'success'}
@@ -290,7 +290,7 @@ class TravelCrud(http.Controller):
                         'user_id': user_travel.user_partner_id.id,
                         'user_name': user_travel.user_partner_id.name,
                         'user_email': user_travel.user_partner_id.email,
-                        'image_1920': user_travel.user_partner_id.image_1920.decode('utf-8')
+                        'image_1920': user_travel.user_partner_id.image_1920.decode('utf-8') if user_travel.user_partner_id.image_1920 else None
                     }
                 }
                 user_travels_list.append(travels_dict)

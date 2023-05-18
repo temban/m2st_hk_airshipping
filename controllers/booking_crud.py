@@ -91,13 +91,14 @@ class TravelBookingController(http.Controller):
                     'kilo_booked': booking.kilo_booked,
                     'kilo_booked_price': booking.kilo_booked_price,
                     'status': booking.status,
+                    'disable': booking.disable,
+                    'confirm': booking.confirm,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
-                        'sender_id':booking.sender_id.id,
-                        'sender_name': booking.receiver_name,
-                        'sender_email': booking.receiver_email,
-                        'sender_phone': booking.receiver_phone,
-                        'sender_address': booking.receiver_address,
+                        'sender_id': booking.sender_id.id,
+                        'sender_name': booking.sender_id.name,
+                        'sender_email': booking.sender_id.email,
+                        'sender_phone': booking.sender_id.phone,
                     },
                     'receiver': {
                         'receiver_partner_id': booking.receiver_partner_id.id,
@@ -124,14 +125,14 @@ class TravelBookingController(http.Controller):
                             'user_id': booking.travel_id.user_partner_id.id,
                             'user_name': booking.travel_id.user_partner_id.name,
                             'user_email': booking.travel_id.user_partner_id.email,
-                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8')
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                         }
                     }
                 }
                 bookings_data.append(booking_data)
         return json.dumps(bookings_data)
 
-    @http.route('/air/api/current/user/my_bookings', type='http', auth='user', website=True, csrf=False, methods=['GET'],
+    @http.route('/air/current/user/my_booking/made', type='http', auth='user', website=True, csrf=False, methods=['GET'],
                 cors='*')
     def current_user_get_travel_bookings(self, **kw):
         TravelBooking = http.request.env['m2st_hk_airshipping.travel_booking']
@@ -144,13 +145,14 @@ class TravelBookingController(http.Controller):
                     'kilo_booked': booking.kilo_booked,
                     'kilo_booked_price': booking.kilo_booked_price,
                     'status': booking.status,
+                    'disable': booking.disable,
+                    'confirm': booking.confirm,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
                         'sender_id': booking.sender_id.id,
-                        'sender_name': booking.receiver_name,
-                        'sender_email': booking.receiver_email,
-                        'sender_phone': booking.receiver_phone,
-                        'sender_address': booking.receiver_address,
+                        'sender_name': booking.sender_id.name,
+                        'sender_email': booking.sender_id.email,
+                        'sender_phone': booking.sender_id.phone,
                     },
                     'receiver': {
                         'receiver_partner_id': booking.receiver_partner_id.id,
@@ -177,14 +179,14 @@ class TravelBookingController(http.Controller):
                             'user_id': booking.travel_id.user_partner_id.id,
                             'user_name': booking.travel_id.user_partner_id.name,
                             'user_email': booking.travel_id.user_partner_id.email,
-                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8')
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                         }
                     }
                 }
                 bookings_data.append(booking_data)
         return json.dumps(bookings_data)
 
-    @http.route('/air/api/current/user/my_reservations', type='http', auth='user', website=True, csrf=False, methods=['GET'],
+    @http.route('/air/current/user/travel/booked', type='http', auth='user', website=True, csrf=False, methods=['GET'],
                 cors='*')
     def current_user_get_travel_reservations(self, **kw):
         TravelBooking = http.request.env['m2st_hk_airshipping.travel_booking']
@@ -197,13 +199,14 @@ class TravelBookingController(http.Controller):
                     'kilo_booked': booking.kilo_booked,
                     'kilo_booked_price': booking.kilo_booked_price,
                     'status': booking.status,
+                    'disable': booking.disable,
+                    'confirm': booking.confirm,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
                         'sender_id': booking.sender_id.id,
-                        'sender_name': booking.receiver_name,
-                        'sender_email': booking.receiver_email,
-                        'sender_phone': booking.receiver_phone,
-                        'sender_address': booking.receiver_address,
+                        'sender_name': booking.sender_id.name,
+                        'sender_email': booking.sender_id.email,
+                        'sender_phone': booking.sender_id.phone,
                     },
                     'receiver': {
                         'receiver_partner_id': booking.receiver_partner_id.id,
@@ -230,23 +233,67 @@ class TravelBookingController(http.Controller):
                             'user_id': booking.travel_id.user_partner_id.id,
                             'user_name': booking.travel_id.user_partner_id.name,
                             'user_email': booking.travel_id.user_partner_id.email,
-                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8')
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                         }
                     }
                 }
                 bookings_data.append(booking_data)
         return json.dumps(bookings_data)
 
-    @http.route('/air/travel/booking/<int:booking_id>', type='http', auth='user', website=True, csrf=False,
+    @http.route('/air/current/user/transfer/booking/<int:booking_id>', auth='user', csrf=False, website=True,
+                methods=['PUT'], type='json', cors='*')
+    def user_transfer_booking(self, booking_id, **kw):
+        booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(booking_id)
+        new_travel_id = kw.get('new_travel_id')
+        if booking:
+            booking.write({
+                'travel_id': new_travel_id,
+            })
+            return {'status': 200, 'message': 'Transferred'}
+        else:
+            return 'Request Failed'
+
+    @http.route('/air/booking/<int:booking_id>/delete', auth='user', csrf=False, website=True,
+                methods=['DELETE'], cors='*')
+    def delete_booking(self, booking_id):
+        booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(booking_id)
+
+        if booking.confirm:
+            error_response = {
+                'success': False,
+                'error_message': 'Deleting confirm booking is not allowed.'
+            }
+            return json.dumps(error_response)
+
+        booking.write({
+            'disable': True,
+        })
+
+        success_response = {
+            'success': True,
+            'message': 'Booking deleted successfully.'
+        }
+        return json.dumps(success_response)
+
+
+    @http.route('/air/view/booking/<int:booking_id>', type='http', auth='user', website=True, csrf=False,
                 methods=['GET'],
                 cors='*')
     def view_booking(self, booking_id):
         booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(booking_id)
+        if booking.disable:
+            error_response = {
+                'success': False,
+                'error_message': 'This booking was deleted.'
+            }
+            return json.dumps(error_response)
         booking_data = {
             'id': booking.id,
             'kilo_booked': booking.kilo_booked,
             'kilo_booked_price': booking.kilo_booked_price,
             'status': booking.status,
+            'disable': booking.disable,
+            'confirm': booking.confirm,
             'type_of_luggage': booking.type_of_luggage,
             'receiver': {
                 'receiver_partner_id': booking.receiver_partner_id.id,
@@ -273,11 +320,13 @@ class TravelBookingController(http.Controller):
                     'user_id': booking.travel_id.user_partner_id.id,
                     'user_name': booking.travel_id.user_partner_id.name,
                     'user_email': booking.travel_id.user_partner_id.email,
-                    'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8')
+                    'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                 }
             }
         }
         return json.dumps(booking_data)
+
+
 
     @http.route('/travel/booking/<int:booking_id>/edit', auth='user', type='http', website=True)
     def edit_booking(self, booking_id, **post):
@@ -315,21 +364,4 @@ class TravelBookingController(http.Controller):
         }
         return json.dumps(success_response)
 
-    @http.route('/travel/booking/<int:booking_id>/delete', auth='user', type='http', website=True)
-    def delete_booking(self, booking_id):
-        booking = request.env['travel.booking'].sudo().browse(booking_id)
 
-        if booking.receiver_partner_id:
-            error_response = {
-                'success': False,
-                'error_message': 'Deleting receiver information is not allowed.'
-            }
-            return json.dumps(error_response)
-
-        booking.unlink()
-
-        success_response = {
-            'success': True,
-            'message': 'Booking deleted successfully.'
-        }
-        return json.dumps(success_response)

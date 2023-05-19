@@ -15,9 +15,9 @@ class FileUpload(models.Model):
     _name = 'm2st_hk_airshipping.airshipping_file_upload'
     _description = 'File Upload'
 
-    cni_doc = fields.Binary(string='cni doc')
+    cni_doc = fields.Binary(string='National identity card or Passport')
     cni_name = fields.Char(string='cni name')
-    ticket_doc = fields.Binary(string='ticket doc')
+    ticket_doc = fields.Binary(string='Flight ticket')
     ticket_name = fields.Char(string='ticket name')
     travel_id = fields.Many2one('m2st_hk_airshipping.airshipping')
 
@@ -33,7 +33,8 @@ class AirShipping(models.Model):
         ('rejected', 'Rejected'),
         ('accepted', 'Accepted')
     ], string='Status', default='pending')
-    disable = fields.Boolean(string='Travel disable', compute='_compute_disable', store=True, default=False, readonly=False)
+    disable = fields.Boolean(string='Travel disable', compute='_compute_disable', store=True, default=False,
+                             readonly=False)
     negotiation = fields.Boolean(string='Travel negotiation', default=False)
     departure_town = fields.Char(string='Departure town', required=True)
     arrival_town = fields.Char(string='Arrival town', required=True)
@@ -51,6 +52,7 @@ class TravelBooking(models.Model):
 
     sender_id = fields.Many2one('res.partner')
     travel_id = fields.Many2one('m2st_hk_airshipping.airshipping', required=True)
+    message_ids = fields.One2many('m2st_hk_airshipping.message', 'travel_booking_id', string='Messages')
     receiver_partner_id = fields.Many2one('res.partner', string='Receiver')
     receiver_name = fields.Char(string='Receiver Name')
     receiver_email = fields.Char(string='Receiver Email')
@@ -59,7 +61,7 @@ class TravelBooking(models.Model):
     type_of_luggage = fields.Text(string='Type of luggage you want to send', required=True)
     luggage_image = fields.Binary(string='Luggage images')
     kilo_booked = fields.Integer(string='kilo qty', required=True)
-    kilo_booked_price = fields.Float(string='Price of reserved kilos', required=True, default=100.0)
+    kilo_booked_price = fields.Float(string='Price of reserved kilos', required=True)
     disable = fields.Boolean(string='Disable Booking', default=False)
     confirm = fields.Boolean(string='Booking confirm status', default=False)
     status = fields.Selection([
@@ -67,6 +69,10 @@ class TravelBooking(models.Model):
         ('rejected', 'Rejected'),
         ('accepted', 'Accepted')
     ], string='Status', default='pending')
+
+    @api.onchange('kilo_booked')
+    def _onchange_kilo_booked_price(self):
+        self.kilo_booked_price = self.travel_id.price_per_kilo * self.kilo_booked
 
     @api.onchange('receiver_partner_id')
     def _onchange_receiver_partner_id(self):
@@ -87,6 +93,17 @@ class TravelBooking(models.Model):
             if not booking.receiver_partner_id and not (
                     booking.receiver_name and booking.receiver_email and booking.receiver_phone):
                 raise exceptions.ValidationError("Receiver information is incomplete.")
+
+
+class Message(models.Model):
+    _name = 'm2st_hk_airshipping.message'
+    _description = 'Messaging Model'
+
+    travel_booking_id = fields.Many2one('m2st_hk_airshipping.travel_booking', string='Travel Booked')
+    sender_id = fields.Many2one('res.partner', string='Sender')
+    receiver_id = fields.Many2one('res.partner', string='Receiver')
+    message = fields.Text(string='Message')
+    date = fields.Datetime(string='Date')
 
 
 class ResUsers(models.Model):

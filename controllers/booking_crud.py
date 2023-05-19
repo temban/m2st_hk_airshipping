@@ -9,6 +9,19 @@ from werkzeug.wrappers import Response
 
 class TravelBookingController(http.Controller):
 
+    @http.route('/air/activate/travel/negotiations/<int:booking_id>', auth='user', csrf=False, website=True,
+                methods=['PUT'], type='json', cors='*')
+    def user_negotiations_booking(self, booking_id, **kw):
+        booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(booking_id)
+        if booking:
+            booking.travel_id.sudo().write({
+                'negotiation': True,
+            })
+            # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
+            return {'status': 200, 'message': 'Negotiations activated'}
+        else:
+            return 'Request Failed'
+
     @http.route('/air/confirm/booking/<int:booking_id>', auth='user', csrf=False, website=True,
                 methods=['PUT'], type='json', cors='*')
     def user_confirm_booking(self, booking_id, **kw):
@@ -17,11 +30,13 @@ class TravelBookingController(http.Controller):
             booking.sudo().write({
                 'confirm': True,
             })
+
             booking.travel_id.kilo_qty -= int(booking.kilo_booked)
             # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
             return {'status': 200, 'message': 'Confirm'}
         else:
             return 'Request Failed'
+
     @http.route('/air/travel/booking/create', type='json', auth='user', website=True, csrf=False, methods=['POST'],
                 cors='*')
     def create_booking(self, **post):
@@ -31,12 +46,8 @@ class TravelBookingController(http.Controller):
         receiver_email = post.get('receiver_email')
         receiver_phone = post.get('receiver_phone')
         receiver_address = post.get('receiver_address')
-
         type_of_luggage = post.get('type_of_luggage')
-        # luggage_image = post['luggage_image'].read()
-        # luggage_image_base64 = base64.b64encode(luggage_image).decode('utf-8') if luggage_image else False
         kilo_booked = post.get('kilo_booked')
-        kilo_booked_price = post.get('kilo_booked_price')
 
         if not receiver_partner_id and not (receiver_name and receiver_email and receiver_phone):
             error_response = {
@@ -70,10 +81,11 @@ class TravelBookingController(http.Controller):
         if receiver_partner_id:
             booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().create(booking_vals1)
             booking._onchange_receiver_partner_id()
+            booking._onchange_kilo_booked_price()
         elif receiver_name and receiver_email or receiver_phone or receiver_address:
             booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().create(booking_vals)
             booking._onchange_receiver_info()
-
+            booking._onchange_kilo_booked_price()
 
         success_response = {
             'booking_id': booking.id,
@@ -89,6 +101,90 @@ class TravelBookingController(http.Controller):
                 'receiver_address': booking.receiver_address,
             }
         }
+        return {'status': 200, 'response': success_response, 'message': 'success'}
+
+    @http.route('/air/booking/luggage_image/<int:booking_id>', type='http', auth='user', website=True, csrf=False,
+                methods=['PUT'],
+                cors='*')
+    def update_luggage_image(self, booking_id, **kwargs):
+        booking = request.env['m2st_hk_airshipping.travel_booking'].browse(int(booking_id))
+
+        luggage_image_data = kwargs['luggage_image'].read()
+        luggage_image_base64 = base64.b64encode(luggage_image_data).decode('utf-8') if luggage_image_data else False
+        result = booking.write({'luggage_image': luggage_image_base64})
+        return json.dumps({'status': 200, 'luggage_image': result, 'message': 'Luggage image updated successfully'})
+
+    @http.route('/air/travel/booking/update/<int:booking_id>', type='json', auth='user', website=True, csrf=False,
+                methods=['PUT'],
+                cors='*')
+    def update_booking(self, booking_id, **post):
+        booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(int(booking_id))
+        if booking.confirm:
+            error_response = {
+                'success': False,
+                'error_message': 'Editing a confirmed booking is not allowed.'
+            }
+            return json.dumps(error_response)
+        receiver_partner_id = post.get('receiver_partner_id')
+        receiver_name = post.get('receiver_name')
+        receiver_email = post.get('receiver_email')
+        receiver_phone = post.get('receiver_phone')
+        receiver_address = post.get('receiver_address')
+
+        type_of_luggage = post.get('type_of_luggage')
+        kilo_booked = post.get('kilo_booked')
+
+        if not booking_id:
+            error_response = {
+                'success': False,
+                'error_message': 'Booking ID is missing.'
+            }
+            return error_response
+
+        if not booking:
+            error_response = {
+                'success': False,
+                'error_message': 'Booking not found.'
+            }
+            return error_response
+
+        update_vals = {
+            'receiver_name': receiver_name,
+            'receiver_email': receiver_email,
+            'receiver_phone': receiver_phone,
+            'receiver_address': receiver_address,
+            'type_of_luggage': type_of_luggage,
+            'kilo_booked': kilo_booked,
+        }
+        update_vals1 = {
+            'receiver_partner_id': receiver_partner_id,
+            'type_of_luggage': type_of_luggage,
+            'kilo_booked': kilo_booked,
+        }
+
+        if receiver_partner_id:
+            booking.write(update_vals1)
+            booking._onchange_receiver_partner_id()
+            booking._onchange_kilo_booked_price()
+        elif receiver_name and receiver_email or receiver_phone or receiver_address:
+            booking.write(update_vals)
+            booking._onchange_receiver_info()
+            booking._onchange_kilo_booked_price()
+
+        success_response = {
+            'booking_id': booking.id,
+            'kilo_booked': booking.kilo_booked,
+            'type_of_luggage': booking.type_of_luggage,
+            'receiver': {
+                'travel_id': booking.travel_id,
+                'receiver_partner_id': booking.receiver_partner_id,
+                'receiver_name': booking.receiver_name,
+                'receiver_email': booking.receiver_email,
+                'receiver_phone': booking.receiver_phone,
+                'receiver_address': booking.receiver_address,
+            }
+        }
+
         return {'status': 200, 'response': success_response, 'message': 'success'}
 
     @http.route('/air/api/get_all_bookings', type='http', auth='user', website=True, csrf=False, methods=['GET'],
@@ -139,18 +235,21 @@ class TravelBookingController(http.Controller):
                             'user_id': booking.travel_id.user_partner_id.id,
                             'user_name': booking.travel_id.user_partner_id.name,
                             'user_email': booking.travel_id.user_partner_id.email,
-                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode(
+                                'utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                         }
                     }
                 }
                 bookings_data.append(booking_data)
         return json.dumps(bookings_data)
 
-    @http.route('/air/current/user/my_booking/made', type='http', auth='user', website=True, csrf=False, methods=['GET'],
+    @http.route('/air/current/user/my_booking/made', type='http', auth='user', website=True, csrf=False,
+                methods=['GET'],
                 cors='*')
     def current_user_get_travel_bookings(self, **kw):
         TravelBooking = http.request.env['m2st_hk_airshipping.travel_booking']
-        travel_bookings = TravelBooking.sudo().search([('disable', '=', False), ('sender_id.id', '=', http.request.env.user.partner_id.id)])
+        travel_bookings = TravelBooking.sudo().search(
+            [('disable', '=', False), ('sender_id.id', '=', http.request.env.user.partner_id.id)])
         bookings_data = []
         for booking in travel_bookings:
             if booking:
@@ -193,7 +292,8 @@ class TravelBookingController(http.Controller):
                             'user_id': booking.travel_id.user_partner_id.id,
                             'user_name': booking.travel_id.user_partner_id.name,
                             'user_email': booking.travel_id.user_partner_id.email,
-                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode(
+                                'utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                         }
                     }
                 }
@@ -204,7 +304,8 @@ class TravelBookingController(http.Controller):
                 cors='*')
     def current_user_get_travel_reservations(self, **kw):
         TravelBooking = http.request.env['m2st_hk_airshipping.travel_booking']
-        travel_bookings = TravelBooking.sudo().search([('disable', '=', False), ('travel_id.user_partner_id.id','=', http.request.env.user.partner_id.id)])
+        travel_bookings = TravelBooking.sudo().search(
+            [('disable', '=', False), ('travel_id.user_partner_id.id', '=', http.request.env.user.partner_id.id)])
         bookings_data = []
         for booking in travel_bookings:
             if booking:
@@ -247,7 +348,8 @@ class TravelBookingController(http.Controller):
                             'user_id': booking.travel_id.user_partner_id.id,
                             'user_name': booking.travel_id.user_partner_id.name,
                             'user_email': booking.travel_id.user_partner_id.email,
-                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode(
+                                'utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                         }
                     }
                 }
@@ -288,7 +390,6 @@ class TravelBookingController(http.Controller):
             'message': 'Booking deleted successfully.'
         }
         return json.dumps(success_response)
-
 
     @http.route('/air/view/booking/<int:booking_id>', type='http', auth='user', website=True, csrf=False,
                 methods=['GET'],
@@ -334,48 +435,9 @@ class TravelBookingController(http.Controller):
                     'user_id': booking.travel_id.user_partner_id.id,
                     'user_name': booking.travel_id.user_partner_id.name,
                     'user_email': booking.travel_id.user_partner_id.email,
-                    'image_1920': booking.travel_id.user_partner_id.image_1920.decode('utf-8') if booking.travel_id.user_partner_id.image_1920 else None
+                    'image_1920': booking.travel_id.user_partner_id.image_1920.decode(
+                        'utf-8') if booking.travel_id.user_partner_id.image_1920 else None
                 }
             }
         }
         return json.dumps(booking_data)
-
-
-
-    @http.route('/travel/booking/<int:booking_id>/edit', auth='user', type='http', website=True)
-    def edit_booking(self, booking_id, **post):
-        booking = request.env['travel.booking'].sudo().browse(booking_id)
-
-        if booking.receiver_partner_id:
-            error_response = {
-                'success': False,
-                'error_message': 'Editing receiver information is not allowed.'
-            }
-            return json.dumps(error_response)
-
-        receiver_name = post.get('receiver_name')
-        receiver_email = post.get('receiver_email')
-        receiver_phone = post.get('receiver_phone')
-        receiver_address = post.get('receiver_address')
-
-        if not (receiver_name and receiver_email and receiver_phone):
-            error_response = {
-                'success': False,
-                'error_message': 'Receiver information is incomplete.'
-            }
-            return json.dumps(error_response)
-
-        booking.write({
-            'receiver_name': receiver_name,
-            'receiver_email': receiver_email,
-            'receiver_phone': receiver_phone,
-            'receiver_address': receiver_address,
-        })
-
-        success_response = {
-            'success': True,
-            'booking_id': booking.id
-        }
-        return json.dumps(success_response)
-
-

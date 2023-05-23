@@ -1,8 +1,5 @@
 from odoo import http, fields
 from odoo.http import request
-from io import BytesIO
-import base64
-from PIL import Image
 import json
 
 class FileUploadController(http.Controller):
@@ -108,10 +105,10 @@ class FileUploadController(http.Controller):
             })
         return json.dumps(partner_data)
 
-from odoo import http, fields
-from odoo.http import request
-import json
-import base64
+# from odoo import http, fields
+# from odoo.http import request
+# import json
+# import base64
 
 # class Image(http.Controller):
 #     @http.route('/image_1920/update', type='http', auth='user', website=True,

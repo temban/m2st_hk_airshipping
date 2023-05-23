@@ -10,11 +10,11 @@ class MessageController(http.Controller):
     @http.route('/air/send_message', type='json', auth='user', website=True,
                 csrf=False, methods=['POST'], cors='*')
     def send_message(self, travel_booking_id, receiver_id, message):
-        travel_booking = request.env['m2st_hk_airshipping.travel_booking'].browse(travel_booking_id)
+        travel_booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(travel_booking_id)
         sender_id = travel_booking.sender_id.id
         date = fields.Datetime.now()
 
-        message = request.env['m2st_hk_airshipping.message'].create({
+        message = request.env['m2st_hk_airshipping.message'].sudo().create({
             'travel_booking_id': travel_booking_id,
             'sender_id': sender_id,
             'receiver_id': receiver_id,
@@ -27,7 +27,7 @@ class MessageController(http.Controller):
     @http.route('/air/message_history/<int:travel_booking_id>', type='http', auth='user', website=True,
                 csrf=False, methods=['GET'], cors='*')
     def message_history(self, travel_booking_id):
-        travel_booking = request.env['m2st_hk_airshipping.travel_booking'].browse(travel_booking_id)
+        travel_booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(travel_booking_id)
         messages = travel_booking.message_ids.sorted('date')
 
         message_history = []
@@ -44,7 +44,7 @@ class MessageController(http.Controller):
                     'kilo_booked_price': message.travel_booking_id.kilo_booked_price,
                     'status': message.travel_booking_id.status,
                     'disable': message.travel_booking_id.disable,
-                    'confirm': message.travel_booking_id.confirm,
+                    # 'code': message.travel_booking_id.code,
                     'type_of_luggage': message.travel_booking_id.type_of_luggage,
                     'sender': {
                         'sender_id': message.travel_booking_id.sender_id.id,
@@ -66,7 +66,7 @@ class MessageController(http.Controller):
                         'arrival_town': message.travel_booking_id.travel_id.arrival_town,
                         'status': message.travel_booking_id.travel_id.status,
                         'disable': message.travel_booking_id.travel_id.disable,
-                        'negotiation': message.travel_booking_id.travel_id.negotiation,
+                        # 'negotiation': message.travel_booking_id.travel_id.negotiation,
                         'departure_date': message.travel_booking_id.travel_id.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': message.travel_booking_id.travel_id.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': message.travel_booking_id.travel_id.kilo_qty,

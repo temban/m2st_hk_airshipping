@@ -32,7 +32,7 @@
                             <field name="kilo_booked"/>
                             <field name="kilo_booked_price"/>
                             <field name="disable"/>
-                            <field name="confirm"/>
+                            <field name="code"/>
                             </group>
                         </group>
                         <group>
@@ -53,8 +53,10 @@
                     <field name="sender_id"/>
                     <field name="travel_id"/>
                     <field name="receiver_partner_id"/>
-                    <field name="type_of_luggage"/>
                     <field name="status"/>
+                    <field name="code"/>
+                    <field name="type_of_luggage"/>
+
                 </tree>
             </field>
         </record>

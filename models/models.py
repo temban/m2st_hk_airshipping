@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, exceptions
+import random
+import string
 from datetime import datetime, date
+import random
+import string
 
 
 class Publicity(models.Model):
@@ -35,7 +39,7 @@ class AirShipping(models.Model):
     ], string='Status', default='pending')
     disable = fields.Boolean(string='Travel disable', compute='_compute_disable', store=True, default=False,
                              readonly=False)
-    negotiation = fields.Boolean(string='Travel negotiation', default=False)
+    # negotiation = fields.Boolean(string='Travel negotiation', default=False)
     departure_town = fields.Char(string='Departure town', required=True)
     arrival_town = fields.Char(string='Arrival town', required=True)
     departure_date = fields.Date(string='Departure date', required=True)
@@ -61,14 +65,23 @@ class TravelBooking(models.Model):
     type_of_luggage = fields.Text(string='Type of luggage you want to send', required=True)
     luggage_image = fields.Binary(string='Luggage images')
     kilo_booked = fields.Integer(string='kilo qty', required=True)
-    kilo_booked_price = fields.Float(string='Price of reserved kilos', required=True)
+    kilo_booked_price = fields.Float(string='Price of reserved kilos')
     disable = fields.Boolean(string='Disable Booking', default=False)
-    confirm = fields.Boolean(string='Booking confirm status', default=False)
+    negotiation = fields.Boolean(string='Travel negotiation', default=False)
+    # confirm = fields.Boolean(string='Booking confirm status', default=False)
+    # booking_state = fields.Boolean(string='Booking start, if it is completed', default=False)
+    code = fields.Char(string='Booking code', readonly=True)
     status = fields.Selection([
         ('pending', 'Pending'),
         ('rejected', 'Rejected'),
-        ('accepted', 'Accepted')
+        ('accepted', 'Accepted'),
+        ('completed', 'Completed')
     ], string='Status', default='pending')
+
+    @api.onchange('disable')
+    def _onchange_book_disable(self):
+        if self.status == 'accepted':
+            self.travel_id.kilo_qty += int(self.kilo_booked)
 
     @api.onchange('kilo_booked')
     def _onchange_kilo_booked_price(self):
@@ -102,8 +115,23 @@ class Message(models.Model):
     travel_booking_id = fields.Many2one('m2st_hk_airshipping.travel_booking', string='Travel Booked')
     sender_id = fields.Many2one('res.partner', string='Sender')
     receiver_id = fields.Many2one('res.partner', string='Receiver')
-    message = fields.Text(string='Message')
+    message = fields.Float(string='Message(Price)')
     date = fields.Datetime(string='Date')
+
+    # def send_message(self, sender_id, receiver_id, message, travel_booking_id):
+    #     # Create a new message record
+    #     new_message = self.sudo().create({
+    #         'sender_id': sender_id,
+    #         'receiver_id': receiver_id,
+    #         'message': message,
+    #         'travel_booking_id': travel_booking_id,
+    #     })
+    #     return new_message
+    #
+    # def get_messages(self, travel_booking_id):
+    #     # Retrieve messages for a specific travel booking
+    #     messages = self.sudo().search([('travel_booking_id', '=', travel_booking_id)])
+    #     return messages
 
 
 class ResUsers(models.Model):
@@ -112,3 +140,7 @@ class ResUsers(models.Model):
     airshipping_ids = fields.One2many('m2st_hk_airshipping.airshipping', 'user_partner_id')
     booking_ids = fields.One2many('m2st_hk_airshipping.travel_booking', 'sender_id')
     # image_1920 = fields.Binary(string='Image', attachment=True)
+
+# "access_m2st_hk_airshipping_airshipping_portal_user","m2st.hk.airshipping.airshipping portal user access","model_m2st_hk_airshipping_airshipping","base.group_portal","1","1","1","0"
+# "access_m2st_hk_airshipping_publicity_portal_user","m2st.hk.airshipping.publicity portal user access","model_m2st_hk_airshipping_publicity","base.group_portal","1","1","1","0"
+# "access_m2st_hk_airshipping_airshipping_file_upload_portal_user","m2st.hk.airshipping.airshipping file upload portal user access","model_m2st_hk_airshipping_airshipping_file_upload","base.group_portal","1","1","1","0"

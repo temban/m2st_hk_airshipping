@@ -66,7 +66,7 @@ class MessageController(http.Controller):
                         'arrival_town': message.travel_booking_id.travel_id.arrival_town,
                         'status': message.travel_booking_id.travel_id.status,
                         'disable': message.travel_booking_id.travel_id.disable,
-                        # 'negotiation': message.travel_booking_id.travel_id.negotiation,
+                        'negotiation': message.travel_booking_id.travel_id.negotiation,
                         'departure_date': message.travel_booking_id.travel_id.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': message.travel_booking_id.travel_id.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': message.travel_booking_id.travel_id.kilo_qty,

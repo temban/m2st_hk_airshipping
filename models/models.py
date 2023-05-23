@@ -39,7 +39,7 @@ class AirShipping(models.Model):
     ], string='Status', default='pending')
     disable = fields.Boolean(string='Travel disable', compute='_compute_disable', store=True, default=False,
                              readonly=False)
-    # negotiation = fields.Boolean(string='Travel negotiation', default=False)
+    negotiation = fields.Boolean(string='Travel negotiation', default=False)
     departure_town = fields.Char(string='Departure town', required=True)
     arrival_town = fields.Char(string='Arrival town', required=True)
     departure_date = fields.Date(string='Departure date', required=True)
@@ -67,7 +67,7 @@ class TravelBooking(models.Model):
     kilo_booked = fields.Integer(string='kilo qty', required=True)
     kilo_booked_price = fields.Float(string='Price of reserved kilos')
     disable = fields.Boolean(string='Disable Booking', default=False)
-    negotiation = fields.Boolean(string='Travel negotiation', default=False)
+    # negotiation = fields.Boolean(string='Travel negotiation', default=False)
     # confirm = fields.Boolean(string='Booking confirm status', default=False)
     # booking_state = fields.Boolean(string='Booking start, if it is completed', default=False)
     code = fields.Char(string='Booking code', readonly=True)

@@ -68,7 +68,7 @@ class TravelBookingController(http.Controller):
             }
             return error_response
         if booking:
-            booking.sudo().write({
+            booking.travel_id.sudo().write({
                 'negotiation': True,
             })
             # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
@@ -293,7 +293,7 @@ class TravelBookingController(http.Controller):
                     'status': booking.status,
                     'disable': booking.disable,
                     'code': booking.code,
-                    'negotiation': booking.negotiation,
+                    # 'negotiation': booking.negotiation,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
                         'sender_id': booking.sender_id.id,
@@ -315,7 +315,7 @@ class TravelBookingController(http.Controller):
                         'arrival_town': booking.travel_id.arrival_town,
                         'status': booking.travel_id.status,
                         'disable': booking.travel_id.disable,
-                        # 'negotiation': booking.travel_id.negotiation,
+                        'negotiation': booking.travel_id.negotiation,
                         'departure_date': booking.travel_id.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': booking.travel_id.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': booking.travel_id.kilo_qty,
@@ -351,8 +351,8 @@ class TravelBookingController(http.Controller):
                     'kilo_booked_price': booking.kilo_booked_price,
                     'status': booking.status,
                     'disable': booking.disable,
-                    # 'code': booking.code,
-                    'negotiation': booking.negotiation,
+                    'code': booking.code,
+                    # 'negotiation': booking.negotiation,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
                         'sender_id': booking.sender_id.id,
@@ -374,7 +374,7 @@ class TravelBookingController(http.Controller):
                         'arrival_town': booking.travel_id.arrival_town,
                         'status': booking.travel_id.status,
                         'disable': booking.travel_id.disable,
-                        # 'negotiation': booking.travel_id.negotiation,
+                        'negotiation': booking.travel_id.negotiation,
                         'departure_date': booking.travel_id.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': booking.travel_id.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': booking.travel_id.kilo_qty,
@@ -410,7 +410,7 @@ class TravelBookingController(http.Controller):
                     'status': booking.status,
                     'disable': booking.disable,
                     'code': booking.code,
-                    'negotiation': booking.negotiation,
+                    # 'negotiation': booking.negotiation,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
                         'sender_id': booking.sender_id.id,
@@ -432,7 +432,7 @@ class TravelBookingController(http.Controller):
                         'arrival_town': booking.travel_id.arrival_town,
                         'status': booking.travel_id.status,
                         'disable': booking.travel_id.disable,
-                        # 'negotiation': booking.travel_id.negotiation,
+                        'negotiation': booking.travel_id.negotiation,
                         'departure_date': booking.travel_id.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': booking.travel_id.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': booking.travel_id.kilo_qty,
@@ -466,8 +466,8 @@ class TravelBookingController(http.Controller):
                     'kilo_booked_price': booking.kilo_booked_price,
                     'status': booking.status,
                     'disable': booking.disable,
-                    # 'code': booking.code,
-                    'negotiation': booking.negotiation,
+                    'code': booking.code,
+                    # 'negotiation': booking.negotiation,
                     'type_of_luggage': booking.type_of_luggage,
                     'sender': {
                         'sender_id': booking.sender_id.id,
@@ -489,7 +489,7 @@ class TravelBookingController(http.Controller):
                         'arrival_town': booking.travel_id.arrival_town,
                         'status': booking.travel_id.status,
                         'disable': booking.travel_id.disable,
-                        # 'negotiation': booking.travel_id.negotiation,
+                        'negotiation': booking.travel_id.negotiation,
                         'departure_date': booking.travel_id.departure_date.strftime('%Y-%m-%d'),
                         'arrival_date': booking.travel_id.arrival_date.strftime('%Y-%m-%d'),
                         'kilo_qty': booking.travel_id.kilo_qty,
@@ -588,8 +588,8 @@ class TravelBookingController(http.Controller):
             'kilo_booked_price': booking.kilo_booked_price,
             'status': booking.status,
             'disable': booking.disable,
-            # 'code': booking.code,
-            'negotiation': booking.negotiation,
+            'code': booking.code,
+            # 'negotiation': booking.negotiation,
             'type_of_luggage': booking.type_of_luggage,
             'sender': {
                 'sender_id': booking.sender_id.id,
@@ -611,7 +611,7 @@ class TravelBookingController(http.Controller):
                 'arrival_town': booking.travel_id.arrival_town,
                 'status': booking.travel_id.status,
                 'disable': booking.travel_id.disable,
-                # 'negotiation': booking.travel_id.negotiation,
+                'negotiation': booking.travel_id.negotiation,
                 'departure_date': booking.travel_id.departure_date.strftime('%Y-%m-%d'),
                 'arrival_date': booking.travel_id.arrival_date.strftime('%Y-%m-%d'),
                 'kilo_qty': booking.travel_id.kilo_qty,

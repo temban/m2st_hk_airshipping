@@ -518,7 +518,7 @@ class TravelBookingController(http.Controller):
                 'error_message': 'Booking not found!'
             }
             return json.dumps(error_response)
-        if booking.status == 'accepted' or booking.status == 'rejected' or booking.status == 'completed':
+        if booking.status == 'accepted' or booking.status == 'completed':
             error_response = {
                 'success': False,
                 'error_message': 'This booking is no longer accessible!'
@@ -529,7 +529,8 @@ class TravelBookingController(http.Controller):
         if booking:
             booking.write({
                 'travel_id': new_travel_id,
-                'code': code
+                'code': code,
+                'status': 'pending'
             })
             booking._onchange_receiver_info()
             booking._onchange_kilo_booked_price()

@@ -10,4 +10,147 @@
   margin-bottom: 1rem;
   max-width: 9rem;
 }
+.btn1{
+    border-radius: 50px;
+}
+.firt_section{
+    padding-bottom: 30px;
+}
+
+.my_col{
+    display: flex;
+    justify-content: baseline;
+    align-items: flex-start;
+    background-color: aqua;
+}
+.checked {
+    color: orange;
+  }
+.fa {
+    font-size: 105px;
+  }
+
+.align{
+    display: flex;
+    align-content: center;
+    align-self: center;
+    padding-top: 15px;
+}
+
+.profile_img{
+position: absolute;
+  top: 130px;
+  position: relative;
+}
+.my_container{
+    border-left: solid rgb(174, 163, 163) 1px ;
+    border-right: solid rgb(174, 163, 163) 1px ;
+    border-bottom: solid rgb(174, 163, 163) 1px ;
+}
+.second_col{
+    padding-top: 150px;
+    padding-bottom: 15px;
+}
+.section_3{
+    margin-top: 10px;
+    padding: 10px 40px;
+}
+.last_col{
+display: flex;
+align-items: end;
+justify-content: end;
+padding-bottom: 15px;
+}
+.section_form{
+background: #000000;
+padding :300px
+}
+@media only screen and (max-width: 600px) {
+    .profile_img{
+        bottom: 0px;
+      }
+  }
+
+
+.my_card{
+     width: 340px;
+    height: 207px;
+background: #FFFFFF;
+box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.15);
+border-radius: 15px;
+padding: 2px 20px;
+display: flex;
+flex-direction: column;
+/* align-items: center; */
+justify-content: space-between;
+}
+.card_country1{
+    height: 60px;
+    border-top: 1px rgba(146, 143, 143, 0.438) solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+}
+.price{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.card_country{
+    height: 60px;
+    border-bottom: 1px rgba(146, 143, 143, 0.438) solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+
+}
+.type{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+
+.modal1 {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content1 {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  max-width: 80%;
+  text-align: center;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button {
+  padding: 8px 16px;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=bootstrap.min.css.map */

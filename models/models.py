@@ -140,7 +140,3 @@ class ResUsers(models.Model):
     airshipping_ids = fields.One2many('m2st_hk_airshipping.airshipping', 'user_partner_id')
     booking_ids = fields.One2many('m2st_hk_airshipping.travel_booking', 'sender_id')
     # image_1920 = fields.Binary(string='Image', attachment=True)
-
-# "access_m2st_hk_airshipping_airshipping_portal_user","m2st.hk.airshipping.airshipping portal user access","model_m2st_hk_airshipping_airshipping","base.group_portal","1","1","1","0"
-# "access_m2st_hk_airshipping_publicity_portal_user","m2st.hk.airshipping.publicity portal user access","model_m2st_hk_airshipping_publicity","base.group_portal","1","1","1","0"
-# "access_m2st_hk_airshipping_airshipping_file_upload_portal_user","m2st.hk.airshipping.airshipping file upload portal user access","model_m2st_hk_airshipping_airshipping_file_upload","base.group_portal","1","1","1","0"

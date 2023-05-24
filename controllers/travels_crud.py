@@ -364,3 +364,145 @@ class TravelCrud(http.Controller):
             return data
         else:
             return 'Something went wrong!'
+
+
+
+#
+# +---------------------+                +--------------------+                 +---------------------+
+# |     User Interface  |                |     Controller     |                 |      Data Access     |
+# +---------------------+                +--------------------+                 +---------------------+
+#           |                                        |                                         |
+#           |       loadStudents(file)                |                                         |
+#           |--------------------------------------->|                                         |
+#           |                                        |                                         |
+#           |                                 createStudent(studentData)                      |
+#           |--------------------------------------->|                                         |
+#           |                                        |             saveStudent(student)        |
+#           |                                        |--------------------------------------->|
+#           |                                        |                                         |
+#           |       changeStatus(studentID, status)   |                                         |
+#           |--------------------------------------->|                                         |
+#           |                                        |              updateStudent(student)     |
+#           |                                        |--------------------------------------->|
+#           |                                        |                                         |
+#           |                         notifySuccess() |                                         |
+#           |<---------------------------------------|                                         |
+#           |                                        |                                         |
+#
+#         +--------------+         +--------------+
+#         |   Course     |         |   Teacher    |
+#         +--------------+         +--------------+
+#         | - courseID   |         | - teacherID  |
+#         | - name       |         | - name       |
+#         | - students   |         +--------------+
+#         +--------------+
+#              |      |
+#              |      |         +-----------------+
+#              |      +---------|   Student       |
+#              |                +-----------------+
+#              |                | - studentID     |
+#              |                | - name          |
+#              |                | - status        |
+#              |                +-----------------+
+#         +--------------+
+#         |   File       |
+#         +--------------+
+#         | - fileID     |
+#         | - name       |
+#         | - path       |
+#         +--------------+
+
+
+# Class diagram:
+#
+#
+# +------------------------+             +-------------+
+# |       CourseService    |             | StudentService  |
+# +------------------------+             +-------------+
+# | +createCourse()        |             | +createStudent()|
+# | +updateCourse()        |             | +updateStudent()|
+# | +deleteCourse()        |             | +deleteStudent()|
+# | +getCourseById()       |             | +getStudentById()|
+# | +getAllCourses()       |             | +getAllStudents()|
+# | +searchCourses()       |             | +searchStudents()|
+# | +uploadExcelFile()     |             | +uploadExcelFile()|
+# +------------------------+             +-------------+
+#                 |                                      |
+#                 |                                      |
+#                 V                                      V
+#        +---------------+                      +---------------+
+#        |     Course    |                      |    Student    |
+#        +---------------+                      +---------------+
+#        | id:int        |                      |id:int         |
+#        | name:String   |                      |name:String   |
+#        | teacher:Teacher|                      |email:String  |
+#        | students:int[] |                      |status:String |
+#        +---------------+                      |course:Course |
+#                                                +---------------+
+#        +----------------+                   ~> +----------------+                 +------------------------+
+#        |     Teacher    |                      |     Grade      |                 |   FinanceService        |
+#        +----------------+                      +----------------+                 +------------------------+
+#        | id:int         |                      | id:int         |                 | +importFinanceFile()    |
+#        | name:String    |                      | grade:int      |                 | +exportFinanceFile()    |
+#        | courses:int[]  |                      | student:Student|                 | +uploadExcelFile()      |
+#        +----------------+                      +----------------+                 | +matchAndGenerateFile() |
+#                                                 | course: Course |<~~~~~~~~~~~~~|    | +sendMailToPaidStudents()|
+#                                                 +----------------+
+#
+#
+#                                                 Sequence diagram:
+#
+  # +----------------+              +-----------------------+               +------------------+
+  # |   User/Teacher |              |   System (JavaFX app) |               |     File System  |
+  # +----------------+              +-----------------------+               +------------------+
+  #        |                                    |                                     |
+  #        |       Create Course                |                                     |
+  #        |----------------------------------->|                                     |
+  #        |                                    |                                     |
+  #        |       Upload Course Excel          |                                     |
+  #        |----------------------------------->|                                     |
+  #        |                                    |                                     |
+  #        |       Assign Teacher               |                                     |
+  #        |----------------------------------->|                                     |
+  #        |                                    |                                     |
+  #        |       Perform CRUD/Search          |                                     |
+  #        |       Operations on Courses        |                                     |
+  #        |----------------------------------->|                                     |
+  #        |                                    |                                     |
+  #        |                                    |    Save Finance_Student_File        |
+  #        |                                    |------------------------------------>|
+  #        |                                    |                                     |
+  #        |                                    |                                     |
+  #        |       Load Student Excel            |                                     |
+  #        |       Update Student Status         |                                     |
+  #        |----------------------------------->|                                     |
+  #        |                                    |                                     |
+  #        |       Perform CRUD/Search          |                                     |
+  #        |       Operations on Students        |                                     |
+  #        |----------------------------------->|                                     |
+  #        |                                    |                                     |
+  #        |                                    |      Export Finance_Student_File    |
+  #        |                                    |<------------------------------------|
+  #        |                                    |                                     |
+  #        |                                    |                                     |
+  #        |                                    |      Import Finance_Student_File    |
+  #        |                                    |----------------------------------->|
+  #        |                                    |                                     |
+  #        |                                    |      Import Student Results File    |
+  #        |                                    |----------------------------------->|
+  #        |                                    |                                     |
+  #        |                                    |         Perform Matching            |
+  #        |                                    |          and Grade Attribution      |
+  #        |                                    |----------------------------------->|
+  #        |                                    |                                     |
+  #        |                                    |       Perform CRUD/Search           |
+  #        |                                    |       Operations on Result File      |
+  #        |                                    |----------------------------------->|
+  #        |                                    |                                     |
+  #        |                                    |       Export Result File            |
+  #        |                                    |<------------------------------------|
+  #        |                                    |                                     |
+  #        |                                    |       Send Mail to Paid Students     |
+  #        |                                    |----------------------------------->|
+  #        |                                    |                                     |
+  #        |                                    |                                     |

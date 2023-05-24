@@ -17,7 +17,7 @@
     'sequence': 10,
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'website_profile', 'base', 'mail', 'base_setup', 'product', 'analytic', 'portal', 'digest', 'web', 'website'],
+    'depends': ['base', 'portal', 'website_profile', 'base', 'mail', 'base_setup', 'product', 'analytic', 'portal', 'digest', 'web', 'website'],
 
     # always loaded
     'data': [
@@ -37,13 +37,6 @@
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
-    ],
-    'external_dependencies': {
-        'python': ['python-socketio', 'python-engineio'],
-    },
-    'odoo.routes': [
-        {'type': 'http', 'auth': 'none', 'route': '/socket.io/',
-         'handler': 'web_socketio.route_handler'},
     ],
     'license': 'LGPL-3',
     'installable': True,

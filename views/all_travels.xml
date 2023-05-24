@@ -21,7 +21,7 @@
     </div>
 </t>
 
-    <img src="http://localhost:8090/web/image/m2st_hk_airshipping.airshipping_file_upload/33/ticket_doc"/>
+<!--<img src="http://localhost:8090/web/image/m2st_hk_airshipping.airshipping_file_upload/33/ticket_doc"/>-->
 
         <t t-name="file.upload.template">
         <div>
@@ -30,7 +30,6 @@
             <button type="button" onclick="uploadFiles()">Upload</button>
         </div>
     </t>
-
                 <form action="/search/travel">
                                 <div class="form-group">
                 <label class="col-sm-2 control-label">Ville_depart:</label>

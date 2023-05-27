@@ -3,7 +3,7 @@
     <data>
         <!-- Form View -->
         <record id="view_travel_booking_form" model="ir.ui.view">
-            <field name="name">publicity.form</field>
+            <field name="name">m2st_hk_airshipping.travel_booking.form</field>
             <field name="model">m2st_hk_airshipping.travel_booking</field>
             <field name="arch" type="xml">
                 <form>
@@ -36,7 +36,9 @@
                             </group>
                         </group>
                         <group>
-                                <field name="luggage_image" widget="image" options='{"size": [800, 500]}'/>
+                              <field name="luggage_image1" widget="image" options='{"size": [800, 500]}'/>
+                              <field name="luggage_image2" widget="image" options='{"size": [800, 500]}'/>
+                              <field name="luggage_image3" widget="image" options='{"size": [800, 500]}'/>
                         </group>
                     </sheet>
                 </form>
@@ -46,7 +48,7 @@
 
         <!-- Tree View -->
         <record id="view_travel_booking_tree" model="ir.ui.view">
-            <field name="name">travel.booking.tree</field>
+            <field name="name">m2st_hk_airshipping.travel_booking.tree</field>
             <field name="model">m2st_hk_airshipping.travel_booking</field>
             <field name="arch" type="xml">
                 <tree>
@@ -61,15 +63,7 @@
             </field>
         </record>
 
-        <!-- Action -->
-        <record id="action_travel_booking" model="ir.actions.act_window">
-            <field name="name">Travel Bookings</field>
-            <field name="res_model">m2st_hk_airshipping.travel_booking</field>
-            <field name="view_mode">tree,form</field>
-        </record>
 
-        <!-- Menu -->
-        <menuitem id="menu_travel_booking" name="HubKilo Booking" action="action_travel_booking"/>
     </data>
 </odoo>
 

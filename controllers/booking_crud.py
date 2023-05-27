@@ -3,9 +3,6 @@ from odoo.http import request
 import json
 import base64
 import uuid
-from datetime import datetime, timedelta
-
-from werkzeug.wrappers import Response
 
 
 class TravelBookingController(http.Controller):
@@ -22,12 +19,9 @@ class TravelBookingController(http.Controller):
             }
             return error_response
         if booking:
-            # booking.travel_id.sudo().write({
-            #     'price_per_kilo': new_price,
-            # })
             booking.sudo().write({
                 'kilo_booked_price': booking.kilo_booked * new_price,
-                'status': 'accepted',
+                'status': 'accepted'
             })
             # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
             return {'status': 200, 'message': 'Price changed!'}
@@ -88,7 +82,7 @@ class TravelBookingController(http.Controller):
             return json.dumps(error_response)
         if booking:
             booking.sudo().write({
-                'status': 'accepted',
+                'status': 'accepted'
             })
 
             booking.travel_id.kilo_qty -= int(booking.kilo_booked)
@@ -109,7 +103,7 @@ class TravelBookingController(http.Controller):
             return error_response
         if booking:
             booking.sudo().write({
-                'status': 'rejected',
+                'status': 'rejected'
             })
             # booking.travel_id.kilo_qty -= int(booking.kilo_booked)
             # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
@@ -191,10 +185,18 @@ class TravelBookingController(http.Controller):
     def update_luggage_image(self, booking_id, **kwargs):
         booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(int(booking_id))
 
-        luggage_image_data = kwargs['luggage_image'].read()
-        luggage_image_base64 = base64.b64encode(luggage_image_data).decode('utf-8') if luggage_image_data else False
-        result = booking.sudo().write({'luggage_image': luggage_image_base64})
-        return json.dumps({'status': 200, 'luggage_image': result, 'message': 'Luggage image updated successfully'})
+        luggage_image1_data = kwargs['luggage_image1'].read()
+        luggage_image2_data = kwargs['luggage_image2'].read()
+        luggage_image3_data = kwargs['luggage_image3'].read()
+        luggage_image1_base64 = base64.b64encode(luggage_image1_data).decode('utf-8') if luggage_image1_data else False
+        luggage_image2_base64 = base64.b64encode(luggage_image2_data).decode('utf-8') if luggage_image2_data else False
+        luggage_image3_base64 = base64.b64encode(luggage_image3_data).decode('utf-8') if luggage_image3_data else False
+
+        result = booking.sudo().write({
+            'luggage_image1': luggage_image1_base64,
+            'luggage_image2': luggage_image2_base64,
+            'luggage_image3': luggage_image3_base64})
+        return json.dumps({'status': 200, 'luggage_images': result, 'message': 'Luggage image updated successfully'})
 
     @http.route('/air/travel/booking/update/<int:booking_id>', type='json', auth='user', website=True, csrf=False,
                 methods=['PUT'], cors='*')
@@ -451,12 +453,70 @@ class TravelBookingController(http.Controller):
                 bookings_data.append(booking_data)
         return json.dumps(bookings_data)
 
-    @http.route('/air/current/user/travel/booked', type='http', auth='user', website=True, csrf=False, methods=['GET'],
+    @http.route('/air/current/user/my_booking/made', type='http', auth='user', website=True, csrf=False,
+                methods=['GET'],
                 cors='*')
-    def current_user_get_travel_reservations(self, **kw):
+    def current_user_get_bookings(self, **kw):
         TravelBooking = http.request.env['m2st_hk_airshipping.travel_booking']
         travel_bookings = TravelBooking.sudo().search(
-            [('disable', '=', False), ('travel_id.user_partner_id.id', '=', http.request.env.user.partner_id.id)])
+            [('disable', '=', False), ('sender_id.id', '=', http.request.env.user.partner_id.id)])
+        bookings_data = []
+        for booking in travel_bookings:
+            if booking:
+                booking_data = {
+                    'id': booking.id,
+                    'kilo_booked': booking.kilo_booked,
+                    'kilo_booked_price': booking.kilo_booked_price,
+                    'status': booking.status,
+                    'disable': booking.disable,
+                    'code': booking.code,
+                    # 'negotiation': booking.negotiation,
+                    'type_of_luggage': booking.type_of_luggage,
+                    'sender': {
+                        'sender_id': booking.sender_id.id,
+                        'sender_name': booking.sender_id.name,
+                        'sender_email': booking.sender_id.email,
+                        'sender_phone': booking.sender_id.phone,
+                    },
+                    'receiver': {
+                        'receiver_partner_id': booking.receiver_partner_id.id,
+                        'receiver_name': booking.receiver_name,
+                        'receiver_email': booking.receiver_email,
+                        'receiver_phone': booking.receiver_phone,
+                        'receiver_address': booking.receiver_address,
+                    },
+                    'travel': {
+                        'id': booking.travel_id.id,
+                        'travel_type': booking.travel_id.travel_type,
+                        'departure_town': booking.travel_id.departure_town,
+                        'arrival_town': booking.travel_id.arrival_town,
+                        'status': booking.travel_id.status,
+                        'disable': booking.travel_id.disable,
+                        'negotiation': booking.travel_id.negotiation,
+                        'departure_date': booking.travel_id.departure_date.strftime('%Y-%m-%d'),
+                        'arrival_date': booking.travel_id.arrival_date.strftime('%Y-%m-%d'),
+                        'kilo_qty': booking.travel_id.kilo_qty,
+                        'price_per_kilo': booking.travel_id.price_per_kilo,
+                        'type_of_luggage_accepted': booking.travel_id.type_of_luggage_accepted,
+                        'files_uploaded_id': booking.travel_id.files_uploaded_id.id,
+                        'traveler': {
+                            'user_id': booking.travel_id.user_partner_id.id,
+                            'user_name': booking.travel_id.user_partner_id.name,
+                            'user_email': booking.travel_id.user_partner_id.email,
+                            'image_1920': booking.travel_id.user_partner_id.image_1920.decode(
+                                'utf-8') if booking.travel_id.user_partner_id.image_1920 else None
+                        }
+                    }
+                }
+                bookings_data.append(booking_data)
+        return json.dumps(bookings_data)
+
+    @http.route('/air/receiver/bookings', type='http', auth='user', website=True, csrf=False, methods=['GET'],
+                cors='*')
+    def receiver_bookings(self, **kw):
+        TravelBooking = http.request.env['m2st_hk_airshipping.travel_booking']
+        travel_bookings = TravelBooking.sudo().search(
+            [('disable', '=', False), ('receiver_partner_id.id', '=', http.request.env.user.partner_id.id)])
         bookings_data = []
         for booking in travel_bookings:
             if booking:
@@ -532,8 +592,6 @@ class TravelBookingController(http.Controller):
                 'code': code,
                 'status': 'pending'
             })
-            booking._onchange_receiver_info()
-            booking._onchange_kilo_booked_price()
             return {'status': 200, 'message': 'Transferred'}
         else:
             return 'Request Failed'

@@ -2,14 +2,90 @@
 <odoo>
     <template id="user_airshippings">
     <link rel="stylesheet" href="/test_project/static/src/css/bootstrap.min.css"/>
+<!--    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
     <script src="/m2st_hk_airshipping/static/src/js/jquery.min.js"></script>
     <script src="/m2st_hk_airshipping/static/src/js/bootstrap.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-                <script type="text/javascript" src="/m2st_hk_airshipping/static/src/req.js"/>
+      <script type="text/javascript" src="/m2st_hk_airshipping/static/src/req.js"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpMQRmHjfXBHgqN3HmBJKe4jFEPnw0pQY&amp;libraries=places"></script>
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+<!--  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>-->
+<!--  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>-->
+
 
 <div class="container">
+
+
+
+
+
+
+
+
+<!--    <head>-->
+<!--    <title>Air Chat</title>-->
+<!--    <script src="//code.jquery.com/jquery-1.11.1.js"></script>-->
+<!--    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>-->
+<!--    <script type="text/javascript">-->
+<!--        $(document).ready(function () {-->
+<!--            var socket = io.connect('http://' + document.domain + ':' + location.port + '/airchat');-->
+
+<!--            socket.on('connect', function () {-->
+<!--                console.log('Connected to server');-->
+<!--            });-->
+
+<!--            socket.on('disconnect', function () {-->
+<!--                console.log('Disconnected from server');-->
+<!--            });-->
+
+<!--            socket.on('new_message', function (data) {-->
+<!--                var message = data.message;-->
+<!--                console.log('New message:', message);-->
+<!--                // Display the new message in the chat interface-->
+<!--                $('#chat').append('<p>' + message + '</p>');-->
+<!--            });-->
+
+<!--            // Handle the form submission-->
+<!--            $('#messageForm').submit(function (event) {-->
+<!--                event.preventDefault();-->
+<!--                var message = $('#messageInput').val();-->
+<!--                // Send the message to the server-->
+<!--                socket.emit('send_message', {'message': message});-->
+<!--                // Clear the input field-->
+<!--                $('#messageInput').val('');-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Air Chat</h1>-->
+<!--    <div id="chat"></div>-->
+<!--    <form id="messageForm">-->
+<!--        <input type="text" id="messageInput"/>-->
+<!--        <input type="submit" value="Send"/>-->
+<!--    </form>-->
+<!--</body>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <input type="text" id="search-input"/>
+<button onclick="searchPlaces(document.getElementById('search-input').value)">Search</button>
 
     <t t-name="m2st_hk_airshipping.MyComponent">
     <div>
@@ -52,6 +128,95 @@
                 </div>
             </div>
         </form>
+
+<!--    <head>-->
+<!--    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>-->
+<!--    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />-->
+<!--  </head>-->
+
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <h2>Bootstrap-select example</h2>-->
+<!--      <p>This uses <a href="https://silviomoreto.github.io/bootstrap-select/">https://silviomoreto.github.io/bootstrap-select/</a></p>-->
+<!--      <hr />-->
+<!--    </div>-->
+
+<!--    <div class="row-fluid">-->
+<!--      <select class="selectpicker" data-show-subtext="true" data-live-search="true">-->
+<!--        <option data-subtext="Rep California">Tom Foolery</option>-->
+<!--        <option data-subtext="Sen California">Bill Gordon</option>-->
+<!--        <option data-subtext="Sen Massacusetts">Elizabeth Warren</option>-->
+<!--        <option data-subtext="Rep Alabama">Mario Flores</option>-->
+<!--        <option data-subtext="Rep Alaska">Don Young</option>-->
+<!--        <option data-subtext="Rep California" disabled="disabled">Marvin Martinez</option>-->
+<!--      </select>-->
+<!--      <span class="help-inline">With <code>data-show-subtext="true" data-live-search="true"</code>. Try searching for california</span>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+<!--  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>-->
+<!--  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>-->
+
+<!--           <div >-->
+<!--    <div class="row">-->
+<!--      <h2>Specialty select example</h2>-->
+<!--      <hr />-->
+<!--    </div>-->
+
+<!--    <div class="row-fluid">-->
+<!--      Select Specialty:-->
+<!--      <select class="selectpicker" data-show-subtext="false" data-live-search="true">-->
+<!--        <option value="">Select</option>-->
+<!--        <option value='Anaesthesia'>Anaesthesia</option>-->
+<!--        <option value='Anatomy and Physiology'>Anatomy and Physiology</option>-->
+<!--        <option value='Cardiology'>Cardiology</option>-->
+<!--        <option value='Clinical Skills'>Clinical Skills</option>-->
+<!--        <option value='Critical Care'>Critical Care</option>-->
+<!--        <option value='Dermatology'>Dermatology</option>-->
+<!--        <option value='Ear, Nose and Throat'>Ear, Nose and Throat</option>-->
+<!--        <option value='Emergency Medicine'>Emergency Medicine</option>-->
+<!--        <option value='Emergency Nursing'>Emergency Nursing</option>-->
+<!--        <option value='Endocrinology and Diabetes'>Endocrinology and Diabetes</option>-->
+<!--        <option value='Gastroenterology'>Gastroenterology</option>-->
+<!--        <option value='General Dentistry'>General Dentistry</option>-->
+<!--        <option value='General Medicine'>General Medicine</option>-->
+<!--        <option value='General Practice'>General Practice</option>-->
+<!--        <option value='Geriatrics'>Geriatrics</option>-->
+<!--        <option value='Haematology'>Haematology</option>-->
+<!--        <option value='Immunology'>Immunology</option>-->
+<!--        <option value='Internal Medicine'>Internal Medicine</option>-->
+<!--        <option value='Maxillofacial and Plastic Surgery'>Maxillofacial and Plastic Surgery</option>-->
+<!--        <option value='Microbiology'>Microbiology</option>-->
+<!--        <option value='Midwifery'>Midwifery</option>-->
+<!--        <option value='Nephrology'>Nephrology</option>-->
+<!--        <option value='Neurology'>Neurology</option>-->
+<!--        <option value='Nursing'>Nursing</option>-->
+<!--        <option value='Obstetrics and Gynaecology'>Obstetrics and Gynaecology</option>-->
+<!--        <option value='Occupational Health'>Occupational Health</option>-->
+<!--        <option value='Oncology'>Oncology</option>-->
+<!--        <option value='Ophthalmology'>Ophthalmology</option>-->
+<!--        <option value='Oral Medicine'>Oral Medicine</option>-->
+<!--        <option value='Orthopaedics'>Orthopaedics</option>-->
+<!--        <option value='Paediatric Nursing'>Paediatric Nursing</option>-->
+<!--        <option value='Paediatrics'>Paediatrics</option>-->
+<!--        <option value='Pain Medicine'>Pain Medicine</option>-->
+<!--        <option value='Palliative Care'>Palliative Care</option>-->
+<!--        <option value='Pathology and Laboratory Medicine'>Pathology and Laboratory Medicine</option>-->
+<!--        <option value='Pharmacology'>Pharmacology</option>-->
+<!--        <option value='Psychiatry'>Psychiatry</option>-->
+<!--        <option value='Public Health'>Public Health</option>-->
+<!--        <option value='Radiology'>Radiology</option>-->
+<!--        <option value='Respiratory'>Respiratory</option>-->
+<!--        <option value='Restorative Dentistry'>Restorative Dentistry</option>-->
+<!--        <option value='Rheumatology'>Rheumatology</option>-->
+<!--        <option value='Surgery'>Surgery</option>-->
+<!--        <option value='Urology'>Urology</option>-->
+<!--      </select>-->
+<!--    </div>-->
+<!--  </div>-->
+
+
+
 
 
 
@@ -146,29 +311,10 @@
 </script>
 
         <script>
-   function eeee() {
-      const url = '/search/travel';
-  const jsonData = JSON.stringify({
-  "jsonrpc": "2.0",
-  "method": "call",
-  "params": {
-    "departure_town": "porto",
-    "arrival_town": "mage"
-  }
-})
-  axios.post(url, jsonData, {
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-  .then(response => {
-    console.log(response);
-  })
-  .catch(error => {
-    console.log(error);
-  })
-    }
 
+var autocomplete = new google.maps.places.Autocomplete(
+    document.getElementById("search-input")
+  );
 </script>
 
         <script>

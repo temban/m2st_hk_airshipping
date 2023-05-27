@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, exceptions
-import random
-import string
-from datetime import datetime, date
-import random
-import string
 
 
 class Publicity(models.Model):
@@ -31,7 +26,7 @@ class AirShipping(models.Model):
     _description = 'Management of air shipments'
 
     user_partner_id = fields.Many2one('res.partner')
-    travel_type = fields.Char(string='Travel type', default='Air')
+    travel_type = fields.Char(string='Travel type', default='air')
     status = fields.Selection([
         ('pending', 'Pending'),
         ('rejected', 'Rejected'),
@@ -63,13 +58,12 @@ class TravelBooking(models.Model):
     receiver_phone = fields.Char(string='Receiver Phone')
     receiver_address = fields.Text(string='Receiver Address')
     type_of_luggage = fields.Text(string='Type of luggage you want to send', required=True)
-    luggage_image = fields.Binary(string='Luggage images')
+    luggage_image1 = fields.Binary(string='Luggage images1')
+    luggage_image2 = fields.Binary(string='Luggage images2')
+    luggage_image3 = fields.Binary(string='Luggage images3')
     kilo_booked = fields.Integer(string='kilo qty', required=True)
     kilo_booked_price = fields.Float(string='Price of reserved kilos')
     disable = fields.Boolean(string='Disable Booking', default=False)
-    # negotiation = fields.Boolean(string='Travel negotiation', default=False)
-    # confirm = fields.Boolean(string='Booking confirm status', default=False)
-    # booking_state = fields.Boolean(string='Booking start, if it is completed', default=False)
     code = fields.Char(string='Booking code', readonly=True)
     status = fields.Selection([
         ('pending', 'Pending'),
@@ -83,7 +77,7 @@ class TravelBooking(models.Model):
         if self.status == 'accepted':
             self.travel_id.kilo_qty += int(self.kilo_booked)
 
-    @api.onchange('kilo_booked')
+    @api.onchange('luggage_dimension')
     def _onchange_kilo_booked_price(self):
         self.kilo_booked_price = self.travel_id.price_per_kilo * self.kilo_booked
 
@@ -112,10 +106,10 @@ class Message(models.Model):
     _name = 'm2st_hk_airshipping.message'
     _description = 'Messaging Model'
 
-    travel_booking_id = fields.Many2one('m2st_hk_airshipping.travel_booking', string='Travel Booked')
-    sender_id = fields.Many2one('res.partner', string='Sender')
-    receiver_id = fields.Many2one('res.partner', string='Receiver')
-    message = fields.Float(string='Message(Price)')
+    travel_booking_id = fields.Many2one('m2st_hk_airshipping.travel_booking', string='Travel Booked', required=True)
+    sender_id = fields.Many2one('res.partner', string='Sender', required=True)
+    receiver_id = fields.Many2one('res.partner', string='Receiver', required=True)
+    message = fields.Float(string='Message(Price)', required=True)
     date = fields.Datetime(string='Date')
 
     # def send_message(self, sender_id, receiver_id, message, travel_booking_id):

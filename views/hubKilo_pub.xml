@@ -3,7 +3,7 @@
     <data>
         <!-- Form View -->
         <record id="view_publicity_form" model="ir.ui.view">
-            <field name="name">publicity.form</field>
+            <field name="name">m2st_hk_airshipping.publicity.form</field>
             <field name="model">m2st_hk_airshipping.publicity</field>
             <field name="arch" type="xml">
                 <form>
@@ -21,7 +21,7 @@
 
         <!-- Tree View -->
         <record id="view_publicity_tree" model="ir.ui.view">
-            <field name="name">publicity.tree</field>
+            <field name="name">m2st_hk_airshipping.publicity.tree</field>
             <field name="model">m2st_hk_airshipping.publicity</field>
             <field name="arch" type="xml">
                 <tree>
@@ -33,7 +33,7 @@
 
         <!-- Action -->
         <record id="action_publicity" model="ir.actions.act_window">
-            <field name="name">Publicity</field>
+            <field name="name">Hubkilo Publicity</field>
             <field name="res_model">m2st_hk_airshipping.publicity</field>
             <field name="view_mode">tree,form</field>
         </record>

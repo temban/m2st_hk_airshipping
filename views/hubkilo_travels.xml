@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
+
 <record id="travel_form" model="ir.ui.view">
-    <field name="name">travel.form</field>
+    <field name="name">m2st_hk_airshipping.airshipping.form</field>
     <field name="model">m2st_hk_airshipping.airshipping</field>
     <field name="arch" type="xml">
         <form>
@@ -39,7 +40,7 @@
 
 
 <record id="travel_tree" model="ir.ui.view">
-    <field name="name">travel.form</field>
+    <field name="name">m2st_hk_airshipping.airshipping.form</field>
     <field name="model">m2st_hk_airshipping.airshipping</field>
     <field name="arch" type="xml">
         <tree>
@@ -66,12 +67,106 @@
 
 
 
-     <record id="travel_action" model="ir.actions.act_window">
-        <field name="name">travels</field>
+     <record id="travel_action_accepted" model="ir.actions.act_window">
+        <field name="name">Travel Announcements Accepted</field>
         <field name="type">ir.actions.act_window</field>
          <field name="res_model">m2st_hk_airshipping.airshipping</field>
          <field name="view_mode">tree,form</field>
-    </record>
+          <field name="view_id" ref="travel_tree"/>
+            <field name="domain">[('status', '=', 'accepted')]</field>
+            <field name="context">{}</field>
+     </record>
 
-    <menuitem id="travels_menu" name="HubKilo Travels Announcements" sequence="20" action="travel_action" groups="base.group_user" web_icon="Clients,static/description/icon.png"/>
+         <record id="travel_action_rejected" model="ir.actions.act_window">
+        <field name="name">Travel Announcements Rejected</field>
+        <field name="type">ir.actions.act_window</field>
+         <field name="res_model">m2st_hk_airshipping.airshipping</field>
+         <field name="view_mode">tree,form</field>
+          <field name="view_id" ref="travel_tree"/>
+            <field name="domain">[('status', '=', 'rejected')]</field>
+            <field name="context">{}</field>
+     </record>
+
+             <record id="travel_action_pending" model="ir.actions.act_window">
+        <field name="name">Pending Travel Announcements</field>
+        <field name="type">ir.actions.act_window</field>
+         <field name="res_model">m2st_hk_airshipping.airshipping</field>
+         <field name="view_mode">tree,form</field>
+          <field name="view_id" ref="travel_tree"/>
+            <field name="domain">[('status', '=', 'pending')]</field>
+            <field name="context">{}</field>
+     </record>
+
+
+            <!-- Action Bookings-->
+        <!-- Action -->
+        <record id="action_booking_pending" model="ir.actions.act_window">
+            <field name="name">Pending Bookings</field>
+            <field name="res_model">m2st_hk_airshipping.travel_booking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('status', '=', 'pending')]</field>
+        </record>
+
+           <record id="action_booking_accepted" model="ir.actions.act_window">
+            <field name="name">Bookings Accepted</field>
+            <field name="res_model">m2st_hk_airshipping.travel_booking</field>
+            <field name="view_mode">tree,form</field>
+               <field name="domain">[('status', '=', 'accepted')]</field>
+        </record>
+
+           <record id="action_booking_rejected" model="ir.actions.act_window">
+            <field name="name">Bookings Rejected</field>
+            <field name="res_model">m2st_hk_airshipping.travel_booking</field>
+            <field name="view_mode">tree,form</field>
+             <field name="domain">[('status', '=', 'rejected')]</field>
+        </record>
+
+           <record id="action_booking_completed" model="ir.actions.act_window">
+            <field name="name">Bookings Completed</field>
+            <field name="res_model">m2st_hk_airshipping.travel_booking</field>
+            <field name="view_mode">tree,form</field>
+               <field name="domain">[('status', '=', 'completed')]</field>
+        </record>
+        <!-- Menu -->
+
+
+                <!-- Action -->
+        <record id="action_messaging" model="ir.actions.act_window">
+            <field name="name">Bookings Negotiations</field>
+            <field name="res_model">m2st_hk_airshipping.message</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+                <!-- Action -->
+        <record id="action_messaging" model="ir.actions.act_window">
+            <field name="name">Bookings Negotiations</field>
+            <field name="res_model">m2st_hk_airshipping.message</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem id="menu_main" name="HubKilo Air-Shipping Services" sequence="10"/>
+
+    <!-- Travels  -->
+    <menuitem id="menu_sub1" name="Travel Announcements" parent="menu_main" sequence="20"/>
+
+    <!-- Menu Items for Submenu Travels -->
+    <menuitem id="menu_item1" name="Pending Travel Announcements" parent="menu_sub1" action="travel_action_pending" sequence="10"/>
+    <menuitem id="menu_item2" name="Travel Announcements Accepted" parent="menu_sub1" action="travel_action_accepted" sequence="20"/>
+    <menuitem id="menu_item3" name="Rejected Travel Announcements" parent="menu_sub1" action="travel_action_rejected" sequence="30"/>
+
+    <!-- Bookings  -->
+    <menuitem id="menu_sub2" name="Bookings" parent="menu_main" sequence="30"/>
+
+    <!-- Menu Items for Bookings  -->
+    <menuitem id="menu_item5" name="Pending Bookings" parent="menu_sub2" action="action_booking_pending" sequence="20"/>
+    <menuitem id="menu_item6" name="Bookings Accepted" parent="menu_sub2" action="action_booking_accepted" sequence="30"/>
+    <menuitem id="menu_item7" name="Bookings Rejected" parent="menu_sub2" action="action_booking_rejected" sequence="40"/>
+    <menuitem id="menu_item8" name="Bookings Completed" parent="menu_sub2" action="action_booking_completed" sequence="50"/>
+
+    <menuitem id="menu_item9" name="Booking Negotiations" parent="menu_main" action="action_messaging" sequence="40"/>
+
+
+
+
 </odoo>

@@ -1,5 +1,3 @@
-import json
-
 from odoo import http, fields
 from odoo.http import request
 import json
@@ -10,13 +8,11 @@ class MessageController(http.Controller):
     @http.route('/air/send_message', type='json', auth='user', website=True,
                 csrf=False, methods=['POST'], cors='*')
     def send_message(self, travel_booking_id, receiver_id, message):
-        travel_booking = request.env['m2st_hk_airshipping.travel_booking'].sudo().browse(travel_booking_id)
-        sender_id = travel_booking.sender_id.id
         date = fields.Datetime.now()
 
         message = request.env['m2st_hk_airshipping.message'].sudo().create({
             'travel_booking_id': travel_booking_id,
-            'sender_id': sender_id,
+            'sender_id': http.request.env.user.partner_id.id,
             'receiver_id': receiver_id,
             'message': message,
             'date': date
@@ -32,12 +28,13 @@ class MessageController(http.Controller):
 
         message_history = []
         for message in messages:
+            print(message.date)
             message_data = {
                 'msg_id': message.id,
                 'sender_id': message.sender_id.id,
                 'receiver_id': message.receiver_id.id,
                 'message': message.message,
-                'date': message.date.strftime('%Y-%m-%d'),
+                'date': message.date.strftime('%Y-%m-%d %H:%M:%S'),
                 'travel_booking': {
                     'id': message.travel_booking_id.id,
                     'kilo_booked': message.travel_booking_id.kilo_booked,

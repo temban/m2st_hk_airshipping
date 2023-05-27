@@ -34,18 +34,6 @@
         </form>
     </field>
 </record>
-
-                <!-- Action -->
-        <record id="action_messaging" model="ir.actions.act_window">
-            <field name="name">Travel Booking Negotiation</field>
-            <field name="res_model">m2st_hk_airshipping.message</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!-- Menu -->
-
-        <!-- Menu -->
-        <menuitem id="menu_messaging" name="HubKilo Booking Negotiation" action="action_messaging"/>
     </data>
 </odoo>
 

@@ -173,7 +173,7 @@ class TravelCrud(http.Controller):
                     'arrival_town': travel.arrival_town,
                     'status': travel.status,
                     'disable': travel.disable,
-                    # 'negotiation': travel.negotiation,
+                    'negotiation': travel.negotiation,
                     'departure_date': travel.departure_date.strftime('%Y-%m-%d'),
                     'arrival_date': travel.arrival_date.strftime('%Y-%m-%d'),
                     'kilo_qty': travel.kilo_qty,

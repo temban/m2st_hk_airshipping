@@ -54,7 +54,7 @@
                 <tree>
                     <field name="sender_id"/>
                     <field name="travel_id"/>
-                    <field name="receiver_partner_id"/>
+                    <field name="receiver_name"/>
                     <field name="status"/>
                     <field name="code"/>
                     <field name="type_of_luggage"/>
@@ -62,6 +62,8 @@
                 </tree>
             </field>
         </record>
+
+
 
 
     </data>

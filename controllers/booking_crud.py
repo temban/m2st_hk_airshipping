@@ -23,6 +23,7 @@ class TravelBookingController(http.Controller):
                 'kilo_booked_price': booking.kilo_booked * new_price,
                 'status': 'accepted'
             })
+            booking.travel_id.kilo_qty -= int(booking.kilo_booked)
             # print(" booking.travel_id.kilo_qty", booking.travel_id.kilo_qty, "int(booking.kilo_booked)")
             return {'status': 200, 'message': 'Price changed!'}
         else:
@@ -208,13 +209,13 @@ class TravelBookingController(http.Controller):
                 'error_message': 'Booking not found!'
             }
             return json.dumps(error_response)
-        if booking.status == 'accepted' or booking.status == 'rejected' or booking.status == 'completed':
+        if booking.status == 'accepted' or booking.status == 'completed':
             error_response = {
                 'success': False,
                 'error_message': 'This booking is no longer accessible!'
             }
             return error_response
-        receiver_partner_id = post.get('receiver_partner_id')
+        receiver_partner_id = int(post.get('receiver_partner_id'))
         receiver_name = post.get('receiver_name')
         receiver_email = post.get('receiver_email')
         receiver_phone = post.get('receiver_phone')
@@ -237,36 +238,34 @@ class TravelBookingController(http.Controller):
                 'error_message': 'Booking not found.'
             }
             return error_response
-
-        update_vals = {
-            'receiver_name': receiver_name,
-            'receiver_email': receiver_email,
-            'receiver_phone': receiver_phone,
-            'receiver_address': receiver_address,
-            'type_of_luggage': type_of_luggage,
-            'kilo_booked': kilo_booked,
-            'code': code,
-        }
-        update_vals1 = {
-            'receiver_partner_id': receiver_partner_id,
-            'type_of_luggage': type_of_luggage,
-            'kilo_booked': kilo_booked,
-            'code': code,
-        }
-
         if receiver_partner_id:
-            booking.write(update_vals1)
-            booking._onchange_receiver_info()
+            booking.update({
+                'receiver_partner_id': receiver_partner_id,
+                'type_of_luggage': type_of_luggage,
+                'kilo_booked': kilo_booked,
+                'code': code,
+            })
+            booking._onchange_receiver_partner_id()
             booking._onchange_kilo_booked_price()
         elif receiver_name and receiver_email or receiver_phone or receiver_address:
-            booking.write(update_vals)
+            booking.update({
+                'receiver_name': receiver_name,
+                'receiver_email': receiver_email,
+                'receiver_phone': receiver_phone,
+                'receiver_address': receiver_address,
+                'type_of_luggage': type_of_luggage,
+                'kilo_booked': kilo_booked,
+                'code': code,
+            })
             booking._onchange_receiver_info()
             booking._onchange_kilo_booked_price()
 
         success_response = {
             'booking_id': booking.id,
             'kilo_booked': booking.kilo_booked,
+            'kilo_booked_price': booking.kilo_booked_price,
             'type_of_luggage': booking.type_of_luggage,
+            'code': code,
             'receiver': {
                 'travel_id': booking.travel_id,
                 'receiver_partner_id': booking.receiver_partner_id,

@@ -9,7 +9,7 @@ from werkzeug.wrappers import Response
 
 class TravelFiles(http.Controller):
 
-    # Controller that uploads and update a travel documents
+    # Controller that uploads and update travel documents
     @http.route('/air/travel/document/upload', type='http', auth='user', website=True, csrf=False, methods=['POST'],
                 cors='*')
     def create_file_upload(self, **kwargs):
@@ -118,7 +118,7 @@ class TravelCrud(http.Controller):
     def travels(self, **kwargs):
         self.update_due_travels_disable()
         travels = request.env['m2st_hk_airshipping.airshipping'].sudo().search(
-            [('status', '=', 'accepted'), ('disable', '=', False)])
+            [('status', '=', 'accepted'), ('disable', '=', False), ('kilo_qty', '>', 0)])
         travels_list = []
         if travels:
             for travel in travels:

@@ -75,9 +75,16 @@ class TravelBooking(models.Model):
     @api.onchange('disable')
     def _onchange_book_disable(self):
         if self.status == 'accepted':
+            self.status = 'rejected'
             self.travel_id.kilo_qty += int(self.kilo_booked)
 
-    @api.onchange('luggage_dimension')
+    @api.onchange('status')
+    def _onchange_book_disable(self):
+        if self.status == 'pending':
+            self.travel_id.kilo_qty += int(self.kilo_booked)
+            print("yesssss", self.travel_id.kilo_qty)
+
+    @api.onchange('kilo_booked')
     def _onchange_kilo_booked_price(self):
         self.kilo_booked_price = self.travel_id.price_per_kilo * self.kilo_booked
 

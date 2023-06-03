@@ -14,6 +14,7 @@
                         <field name="travel_type"/>
                         <field name="status"/>
                         <field name="disable"/>
+                        <field name="negotiation" string="Negotiation"/>
                         <field name="type_of_luggage_accepted"/>
                     </group>
                     <group>
@@ -48,6 +49,7 @@
             <field name="travel_type" string="Travel Type"/>
             <field name="status" string="Status"/>
             <field name="disable" string="Disable"/>
+            <field name="negotiation" string="Negotiation"/>
             <field name="departure_town" string="Departure Town"/>
             <field name="arrival_town" string="Arrival Town"/>
             <field name="departure_date" string="Departure Date"/>
@@ -75,6 +77,7 @@
           <field name="view_id" ref="travel_tree"/>
             <field name="domain">[('status', '=', 'accepted')]</field>
             <field name="context">{}</field>
+            <field name="search_view_id" ref="travel_tree"/>
      </record>
 
          <record id="travel_action_rejected" model="ir.actions.act_window">
@@ -85,6 +88,7 @@
           <field name="view_id" ref="travel_tree"/>
             <field name="domain">[('status', '=', 'rejected')]</field>
             <field name="context">{}</field>
+             <field name="search_view_id" ref="travel_tree"/>
      </record>
 
              <record id="travel_action_pending" model="ir.actions.act_window">
@@ -95,6 +99,7 @@
           <field name="view_id" ref="travel_tree"/>
             <field name="domain">[('status', '=', 'pending')]</field>
             <field name="context">{}</field>
+                 <field name="search_view_id" ref="travel_tree"/>
      </record>
 
 
@@ -105,6 +110,7 @@
             <field name="res_model">m2st_hk_airshipping.travel_booking</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('status', '=', 'pending')]</field>
+            <field name="search_view_id" ref="view_travel_booking_tree"/>
         </record>
 
            <record id="action_booking_accepted" model="ir.actions.act_window">
@@ -112,6 +118,7 @@
             <field name="res_model">m2st_hk_airshipping.travel_booking</field>
             <field name="view_mode">tree,form</field>
                <field name="domain">[('status', '=', 'accepted')]</field>
+               <field name="search_view_id" ref="view_travel_booking_tree"/>
         </record>
 
            <record id="action_booking_rejected" model="ir.actions.act_window">
@@ -119,6 +126,7 @@
             <field name="res_model">m2st_hk_airshipping.travel_booking</field>
             <field name="view_mode">tree,form</field>
              <field name="domain">[('status', '=', 'rejected')]</field>
+               <field name="search_view_id" ref="view_travel_booking_tree"/>
         </record>
 
            <record id="action_booking_completed" model="ir.actions.act_window">
@@ -126,6 +134,7 @@
             <field name="res_model">m2st_hk_airshipping.travel_booking</field>
             <field name="view_mode">tree,form</field>
                <field name="domain">[('status', '=', 'completed')]</field>
+               <field name="search_view_id" ref="view_travel_booking_tree"/>
         </record>
         <!-- Menu -->
 
@@ -135,13 +144,7 @@
             <field name="name">Bookings Negotiations</field>
             <field name="res_model">m2st_hk_airshipping.message</field>
             <field name="view_mode">tree,form</field>
-        </record>
-
-                <!-- Action -->
-        <record id="action_messaging" model="ir.actions.act_window">
-            <field name="name">Bookings Negotiations</field>
-            <field name="res_model">m2st_hk_airshipping.message</field>
-            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_m2st_hk_airshipping_message_tree"/>
         </record>
 
 

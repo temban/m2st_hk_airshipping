@@ -28,7 +28,6 @@ class MessageController(http.Controller):
 
         message_history = []
         for message in messages:
-            print(message.date)
             message_data = {
                 'msg_id': message.id,
                 'sender_id': message.sender_id.id,

@@ -36,6 +36,7 @@
             <field name="name">Hubkilo Publicity</field>
             <field name="res_model">m2st_hk_airshipping.publicity</field>
             <field name="view_mode">tree,form</field>
+                        <field name="search_view_id" ref="view_publicity_tree"/>
         </record>
 
         <!-- Menu -->

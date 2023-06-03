@@ -15,3 +15,4 @@ access_m2st_hk_airshipping_message,m2st_hk_airshipping_message,model_m2st_hk_air
 
 access_m2st_hk_airshipping_airshipping_file_upload,m2st_hk_airshipping_airshipping_file_upload,model_m2st_hk_airshipping_airshipping_file_upload,base.group_user,1,1,1,1
 "access_m2st_hk_airshipping_airshipping_file_upload_portal_user","m2st.hk.airshipping.airshipping file upload portal user access","model_m2st_hk_airshipping_airshipping_file_upload","base.group_portal","1","1","1","1"
+
